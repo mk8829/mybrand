@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<style>
+:root {
+    --brand-pink: #ff6b9d;
+    --text-main: #1a1a1a;
+    --text-muted: #717171;
+    --card-bg: #ffffff;
+    --transition-speed: 0.6s;
+    --ease: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.cart-related-section {
+    padding: 40px 20px;
+    background: #fdfdfd;
+    font-family: 'Inter', sans-serif;
+}
+
+.section-header {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.section-header h3 {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+/* Product Grid */
+.product-slider-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+/* Product Card */
+.p-card {
+    background: var(--card-bg);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+/* Image Sliding Container */
+.p-img-box {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
+.p-img-track {
+    display: flex;
+    width: 200%; /* Holds two images side-by-side */
+    height: 100%;
+    transition: transform var(--transition-speed) var(--ease);
+}
+
+.p-img-track img {
+    width: 50%; /* Each image takes half the track width */
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Hover Action: Slide the track */
+.p-card:hover .p-img-track {
+    transform: translateX(-50%);
+}
+
+/* Info Section */
+.p-info {
+    padding: 5px;
+}
+
+.p-category {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--brand-pink);
+    font-weight: 700;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.p-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 6px;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.p-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.p-price {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.p-add-btn {
+    background: none;
+    border: 1px solid #ddd;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-main);
+    transition: all 0.3s ease;
+}
+
+.p-card:hover .p-add-btn {
+    background: var(--brand-pink);
+    border-color: var(--brand-pink);
+    color: #fff;
+}
+
+@media (max-width: 576px) {
+    .product-slider-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+<body>
+
+<section class="cart-related-section">
+    <div class="section-header">
+        <h3>You might also like</h3>
+    </div>
+
+    <div class="product-slider-grid">
+        <a href="#" class="p-card">
+            <div class="p-img-box">
+                <div class="p-img-track">
+                    <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=400" alt="Primary">
+                    <img src="https://images.unsplash.com/photo-1598440467723-5935f444de4e?auto=format&fit=crop&q=80&w=400" alt="Secondary">
+                </div>
+            </div>
+            <div class="p-info">
+                <span class="p-category">Bath Care</span>
+                <span class="p-name">Activated Charcoal Soap</span>
+                <div class="p-price-row">
+                    <span class="p-price">$6.99</span>
+                    <button class="p-add-btn"><i class="fa-solid fa-plus"></i></button>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="p-card">
+            <div class="p-img-box">
+                <div class="p-img-track">
+                    <img src="https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&q=80&w=400" alt="Primary">
+                    <img src="https://images.unsplash.com/photo-1556229167-9134015f6244?auto=format&fit=crop&q=80&w=400" alt="Secondary">
+                </div>
+            </div>
+            <div class="p-info">
+                <span class="p-category">Skin Care</span>
+                <span class="p-name">Aloe & Spirulina Gel</span>
+                <div class="p-price-row">
+                    <span class="p-price">$5.99</span>
+                    <button class="p-add-btn"><i class="fa-solid fa-plus"></i></button>
+                </div>
+            </div>
+        </a>
+
+        </div>
+</section>
+</body>
+</html>

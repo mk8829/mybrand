@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /mybrandplease/
+
+  # Keep existing files/directories working normally
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Pretty URL for data sheets page
+  RewriteRule ^data-sheets/?$ data-sheets.php [L,QSA,NC]
+
+  # Pretty URL for why choose us pages: /mybrandplease/<slug>
+  RewriteRule ^([a-z0-9-]+)/?$ why-page.php?slug=$1 [L,QSA,NC]
+</IfModule>
