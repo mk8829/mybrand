@@ -153,6 +153,37 @@ $footerSections = cms_get_footer_sections();
         </div>
       </div>
 
+      <div class="site-visit-popup" id="site-visit-popup" aria-hidden="true">
+        <div class="site-visit-popup__backdrop" data-site-popup-close></div>
+        <div class="site-visit-popup__dialog" role="dialog" aria-modal="true" aria-labelledby="site-visit-popup-title">
+          <button type="button" class="site-visit-popup__close" data-site-popup-close aria-label="Close popup">&times;</button>
+          <span class="site-visit-popup__eyebrow">Private Label Cosmetics</span>
+          <h3 class="site-visit-popup__title" id="site-visit-popup-title">Build Your Brand With Mybrandplease</h3>
+          <p class="site-visit-popup__text">
+            We help salons, spas, retailers, hotels, and growing brands create premium skin care, hair care, body care, and personal care products with low MOQ and expert private label support.
+          </p>
+          <div class="site-visit-popup__points">
+            <span><i class="fa-solid fa-check"></i> Custom formulations</span>
+            <span><i class="fa-solid fa-check"></i> Label design support</span>
+            <span><i class="fa-solid fa-check"></i> Worldwide enquiries</span>
+          </div>
+          <button type="button" class="site-visit-popup__button" id="site-popup-enquiry-btn">
+            Get in Touch
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <a
+        href="https://wa.me/919717004615"
+        class="whatsapp-chat-button"
+        id="whatsapp-chat-button"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Chat with us on WhatsApp">
+        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+      </a>
+
       <style>
         /* CTA Section Styles */
         .cta-section {
@@ -450,6 +481,188 @@ $footerSections = cms_get_footer_sections();
         
         .enquiry-modal__submit:active {
           transform: translateY(0);
+        }
+
+        /* Site Visit Popup */
+        .site-visit-popup {
+          position: fixed;
+          inset: 0;
+          z-index: 10950;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          padding: 18px;
+        }
+        .site-visit-popup.is-open {
+          display: flex;
+        }
+        .site-visit-popup__backdrop {
+          position: absolute;
+          inset: 0;
+          background: rgba(12, 12, 12, 0.58);
+          backdrop-filter: blur(5px);
+        }
+        .site-visit-popup__dialog {
+          position: relative;
+          width: min(520px, 100%);
+          border-radius: 18px;
+          background: #fff;
+          padding: 34px 30px 30px;
+          box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+          animation: modalSlideIn 0.3s ease;
+          overflow: hidden;
+        }
+        .site-visit-popup__dialog::before {
+          content: "";
+          position: absolute;
+          inset: 0 0 auto;
+          height: 6px;
+          background: linear-gradient(90deg, #ee2d7a, #ff8067);
+        }
+        .site-visit-popup__close {
+          position: absolute;
+          top: 12px;
+          right: 16px;
+          border: 0;
+          background: transparent;
+          color: #5f6368;
+          cursor: pointer;
+          font-size: 30px;
+          line-height: 1;
+          transition: color 0.2s ease, transform 0.2s ease;
+        }
+        .site-visit-popup__close:hover {
+          color: #ee2d7a;
+          transform: rotate(90deg);
+        }
+        .site-visit-popup__eyebrow {
+          display: inline-flex;
+          margin-bottom: 12px;
+          color: #ee2d7a;
+          font-size: 13px;
+          font-weight: 800;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+        }
+        .site-visit-popup__title {
+          margin: 0 28px 14px 0;
+          color: #202124;
+          font-size: 30px;
+          line-height: 1.18;
+          font-weight: 800;
+        }
+        .site-visit-popup__text {
+          margin: 0;
+          color: #555b61;
+          font-size: 16px;
+          line-height: 1.7;
+        }
+        .site-visit-popup__points {
+          display: grid;
+          gap: 10px;
+          margin: 22px 0 26px;
+        }
+        .site-visit-popup__points span {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          color: #2d3436;
+          font-weight: 700;
+        }
+        .site-visit-popup__points i {
+          width: 22px;
+          height: 22px;
+          border-radius: 50%;
+          background: #ffeaf3;
+          color: #ee2d7a;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+          flex: 0 0 auto;
+        }
+        .site-visit-popup__button {
+          width: 100%;
+          min-height: 52px;
+          border: 0;
+          border-radius: 999px;
+          background: linear-gradient(135deg, #ee2d7a 0%, #ff6b6b 100%);
+          color: #fff;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          font-size: 16px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          box-shadow: 0 8px 22px rgba(238, 45, 122, 0.35);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .site-visit-popup__button:hover {
+          color: #fff;
+          transform: translateY(-2px);
+          box-shadow: 0 10px 28px rgba(238, 45, 122, 0.45);
+        }
+
+        @media (max-width: 575px) {
+          .site-visit-popup__dialog {
+            padding: 30px 22px 24px;
+            border-radius: 14px;
+          }
+          .site-visit-popup__title {
+            font-size: 25px;
+          }
+          .site-visit-popup__text {
+            font-size: 15px;
+          }
+        }
+
+        .whatsapp-chat-button {
+          position: fixed;
+          right: 20px;
+          bottom: 76px;
+          width: 46px;
+          height: 46px;
+          border-radius: 50%;
+          background: #25d366;
+          color: #fff;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 26px;
+          box-shadow: 0 10px 26px rgba(37, 211, 102, 0.34);
+          z-index: 100;
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(-100px);
+          transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .whatsapp-chat-button.active-progress {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0) scale(1);
+        }
+        .whatsapp-chat-button:hover,
+        .whatsapp-chat-button:focus-visible {
+          color: #fff;
+          transform: translateY(-2px) scale(1.04);
+          box-shadow: 0 12px 30px rgba(37, 211, 102, 0.46);
+        }
+        .whatsapp-chat-button:focus-visible {
+          outline: 2px solid #fff;
+          outline-offset: 3px;
+        }
+
+        @media (max-width: 575px) {
+          .whatsapp-chat-button {
+            right: 20px;
+            bottom: 76px;
+            width: 46px;
+            height: 46px;
+            font-size: 26px;
+          }
         }
       </style>
 
@@ -1064,18 +1277,56 @@ $footerSections = cms_get_footer_sections();
         track.addEventListener('pointerup', endDrag);
         track.addEventListener('pointercancel', endDrag);
 
-          // Keep all reel videos autoplaying and open modal on card click.
-          track.querySelectorAll('.social-reels__card').forEach(function (card) {
+        function updateVolumeButton(button, isMuted) {
+          if (!button) return;
+          button.classList.toggle('is-unmuted', !isMuted);
+          button.setAttribute('aria-pressed', isMuted ? 'false' : 'true');
+          button.setAttribute('aria-label', isMuted ? 'Unmute reel' : 'Mute reel');
+          button.innerHTML = '<i class="fa-solid ' + (isMuted ? 'fa-volume-xmark' : 'fa-volume-high') + '" aria-hidden="true"></i>';
+        }
+
+        function muteOtherReels(activeVideo) {
+          track.querySelectorAll('.social-reels__video').forEach(function (video) {
+            if (video === activeVideo) return;
+            video.muted = true;
+            const card = video.closest('.social-reels__card');
+            updateVolumeButton(card ? card.querySelector('.social-reels__volume-btn') : null, true);
+          });
+        }
+
+        // Keep all reel videos autoplaying and open modal on card click.
+        track.querySelectorAll('.social-reels__card').forEach(function (card) {
             const video = card.querySelector('video');
             const badgeLink = card.querySelector('.social-reels__badge--link');
+            const volumeButton = card.querySelector('.social-reels__volume-btn');
             if (video) {
               video.autoplay = true;
               video.muted = true;
               video.loop = true;
               video.playsInline = true;
               video.preload = 'metadata';
+              updateVolumeButton(volumeButton, true);
               const p = video.play();
               if (p && typeof p.catch === 'function') p.catch(function () {});
+            }
+
+            if (volumeButton && video) {
+              volumeButton.addEventListener('pointerdown', function (event) {
+                event.stopPropagation();
+              });
+              volumeButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                const shouldUnmute = video.muted;
+                if (shouldUnmute) {
+                  muteOtherReels(video);
+                }
+                video.muted = !shouldUnmute;
+                updateVolumeButton(volumeButton, video.muted);
+                const p = video.play();
+                if (p && typeof p.catch === 'function') p.catch(function () {});
+              });
             }
 
           if (badgeLink) {
@@ -1086,6 +1337,7 @@ $footerSections = cms_get_footer_sections();
 
           function openFromCard(event) {
             if (event.target.closest('.social-reels__badge--link')) return;
+            if (event.target.closest('.social-reels__volume-btn')) return;
             const videoSrc = card.getAttribute('data-video-src') || '';
             if (videoSrc !== '') {
               openReelModal(videoSrc);
@@ -1253,9 +1505,9 @@ $footerSections = cms_get_footer_sections();
       // CTA Modal Functionality
       (function () {
         const modal = document.getElementById('enquiry-modal');
-        const openBtn = document.getElementById('open-enquiry-btn');
+        const openTriggers = document.querySelectorAll('#open-enquiry-btn, [data-open-enquiry]');
         
-        if (!modal || !openBtn) return;
+        if (!modal) return;
 
         function restoreNativeModalSelects() {
           if (typeof jQuery === 'undefined' || !jQuery.fn || !jQuery.fn.niceSelect) return;
@@ -1296,8 +1548,15 @@ $footerSections = cms_get_footer_sections();
           document.body.style.overflow = '';
         }
 
-        // Open modal when CTA button is clicked
-        openBtn.addEventListener('click', openModal);
+        window.mybrandpleaseOpenEnquiryModal = openModal;
+
+        // Open modal when CTA buttons are clicked
+        openTriggers.forEach(function (trigger) {
+          trigger.addEventListener('click', function (event) {
+            event.preventDefault();
+            openModal();
+          });
+        });
 
         // Close modal when backdrop or close button is clicked
         modal.querySelectorAll('[data-enquiry-close]').forEach(function (trigger) {
@@ -1326,6 +1585,96 @@ $footerSections = cms_get_footer_sections();
             // You can add client-side validation here if needed
             console.log('Form submitted');
           });
+        }
+      })();
+
+      // Site visit popup: show twice per page load, first after 15s, second after 1 minute.
+      (function () {
+        const popup = document.getElementById('site-visit-popup');
+        if (!popup) return;
+
+        const firstDelayMs = 15000;
+        const repeatDelayMs = 60000;
+        const maxShows = 2;
+        let timerId = 0;
+        let showCount = 0;
+
+        function scheduleNextPopup(delay) {
+          if (showCount >= maxShows) return;
+          if (timerId) window.clearTimeout(timerId);
+          timerId = window.setTimeout(openPopup, delay);
+        }
+
+        function openPopup() {
+          if (showCount >= maxShows) return;
+          if (popup.classList.contains('is-open')) return;
+          const enquiryModal = document.getElementById('enquiry-modal');
+          if (enquiryModal && enquiryModal.classList.contains('is-open')) {
+            scheduleNextPopup(repeatDelayMs);
+            return;
+          }
+          showCount += 1;
+          popup.classList.add('is-open');
+          popup.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closePopup(restoreScroll) {
+          popup.classList.remove('is-open');
+          popup.setAttribute('aria-hidden', 'true');
+          if (restoreScroll !== false) {
+            document.body.style.overflow = '';
+          }
+          scheduleNextPopup(repeatDelayMs);
+        }
+
+        scheduleNextPopup(firstDelayMs);
+
+        popup.querySelectorAll('[data-site-popup-close]').forEach(function (trigger) {
+          trigger.addEventListener('click', function () {
+            closePopup(true);
+          });
+        });
+
+        const enquiryButton = document.getElementById('site-popup-enquiry-btn');
+        if (enquiryButton) {
+          enquiryButton.addEventListener('click', function () {
+            closePopup(false);
+            if (typeof window.mybrandpleaseOpenEnquiryModal === 'function') {
+              window.mybrandpleaseOpenEnquiryModal();
+            } else {
+              window.location.href = '<?php echo url('contact.php'); ?>';
+            }
+          });
+        }
+
+        document.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape' && popup.classList.contains('is-open')) {
+            closePopup(true);
+          }
+        });
+      })();
+
+      // WhatsApp chat button follows the same visibility as the back-to-top progress button.
+      (function () {
+        const button = document.getElementById('whatsapp-chat-button');
+        const progressWrap = document.querySelector('.progress-wrap');
+        if (!button) return;
+
+        function syncWithProgress() {
+          const isActive = progressWrap
+            ? progressWrap.classList.contains('active-progress')
+            : (window.scrollY || window.pageYOffset || 0) > 50;
+          button.classList.toggle('active-progress', isActive);
+        }
+
+        syncWithProgress();
+
+        if (progressWrap && window.MutationObserver) {
+          const observer = new MutationObserver(syncWithProgress);
+          observer.observe(progressWrap, { attributes: true, attributeFilter: ['class'] });
+        } else {
+          window.addEventListener('scroll', syncWithProgress, { passive: true });
         }
       })();
 

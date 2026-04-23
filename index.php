@@ -4,6 +4,50 @@ require_once __DIR__ . '/includes/cms.php';
 
 $homeProducts = array_slice(catalog_products(), 0, 8);
 $homeCategories = catalog_categories();
+$homeCategoryDisplay = [
+  'skin-care' => [
+    'label' => 'SKIN CARE',
+    'children' => [
+      'skin-care-environmental-defense',
+      'skin-care-advanced',
+      'skin-care-age-defying',
+      'skin-care-peptides',
+      'vitamin-c',
+      'skin-care-brightening',
+      'skin-care-super-fruits',
+      'skin-care-marine-complex',
+      'skin-care-blemish-prone-skin',
+      'skin-care-botanical',
+    ],
+  ],
+  'body-care' => ['label' => 'BODY CARE'],
+  'hair-care' => ['label' => 'HAIR CARE'],
+  'bathing-soaps' => ['label' => 'BATHING SOAPS'],
+  'men-s-care' => ['label' => "FOR MEN'S"],
+];
+$homeCategoryBySlug = [];
+foreach ($homeCategories as $category) {
+  $homeCategoryBySlug[(string) $category['slug']] = $category;
+}
+$homeCategories = [];
+foreach ($homeCategoryDisplay as $slug => $display) {
+  if (!isset($homeCategoryBySlug[$slug])) {
+    continue;
+  }
+  $category = $homeCategoryBySlug[$slug];
+  $category['display_name'] = $display['label'];
+  if (!empty($display['children']) && !empty($category['subcategories'])) {
+    $childOrder = array_flip($display['children']);
+    $children = array_values(array_filter($category['subcategories'], static function (array $child) use ($childOrder): bool {
+      return isset($childOrder[(string) $child['slug']]);
+    }));
+    usort($children, static function (array $a, array $b) use ($childOrder): int {
+      return ($childOrder[(string) $a['slug']] ?? PHP_INT_MAX) <=> ($childOrder[(string) $b['slug']] ?? PHP_INT_MAX);
+    });
+    $category['subcategories'] = $children;
+  }
+  $homeCategories[] = $category;
+}
 $homeSlides = cms_get_home_slides();
 $homeTestimonials = cms_get_home_testimonials();
 $homeOffices = cms_get_home_offices();
@@ -207,7 +251,7 @@ function closeLogoutMessage() {
             <div class="nav-tabs-modern" id="homeCategoryTabs">
               <?php foreach ($homeCategories as $idx => $cat): ?>
                 <a href="#" class="nav-tab-item <?= $idx === 0 ? 'active' : '' ?>" data-cat="<?= htmlspecialchars((string)$cat['slug'], ENT_QUOTES, 'UTF-8') ?>">
-                  <?= htmlspecialchars((string)$cat['name'], ENT_QUOTES, 'UTF-8') ?>
+                  <?= htmlspecialchars((string)($cat['display_name'] ?? $cat['name']), ENT_QUOTES, 'UTF-8') ?>
                 </a>
               <?php endforeach; ?>
             </div>
@@ -253,7 +297,6 @@ function closeLogoutMessage() {
                     <img src="${toUrl(item.image)}" class="cat-image" alt="${esc(item.name)}">
                     <div class="cat-overlay">
                       <h3 class="cat-title">${esc(item.name)}</h3>
-                      <span class="cat-link">Explore Collection <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                   </a>
                 `).join('');
@@ -545,7 +588,7 @@ function closeLogoutMessage() {
                     </div>
                   </div>
                   <div class="testimonial3-controls">
-                    <div class="testimonial3-controls__arrowLeft"><i class="fa-solid fa-angle-left"></i></div>
+                    <div class="testimonial3-controls__arrowLeft"><i class="fa-solid fa-angle-left"></i>Previous</div>
                     <div class="testimonial3-controls__arrowRight">next <i class="fa-solid fa-angle-right"></i></div>
                   </div>
                 </div>
@@ -582,6 +625,9 @@ function closeLogoutMessage() {
                     loop
                     playsinline
                     preload="metadata"></video>
+                  <button class="social-reels__volume-btn" type="button" aria-label="Unmute reel" aria-pressed="false">
+                    <i class="fa-solid fa-volume-xmark" aria-hidden="true"></i>
+                  </button>
                 <?php elseif ($embedUrl !== ''): ?>
                   <iframe
                     src="<?php echo htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8'); ?>"
