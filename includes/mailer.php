@@ -43,17 +43,19 @@ function meeting_mail_last_error(?string $set = null): string
     return $lastError;
 }
 
-function meeting_send_html_mail(string $to, string $subject, string $htmlBody): bool
+function meeting_send_html_mail(string $to, string $subject, string $htmlBody, ?string $replyTo = null, ?string $replyToName = null): bool
 {
     meeting_mail_last_error('');
     $to = trim($to);
     if ($to === '' || !filter_var($to, FILTER_VALIDATE_EMAIL)) {
         meeting_mail_last_error('Invalid recipient email.');
+        meeting_mail_log($to, $subject, false, 'Invalid recipient email.');
         return false;
     }
 
     if (!class_exists(PHPMailer::class)) {
         meeting_mail_last_error('PHPMailer is not available in vendor/autoload.php.');
+        meeting_mail_log($to, $subject, false, 'PHPMailer is not available in vendor/autoload.php.');
         return false;
     }
 
@@ -90,23 +92,61 @@ function meeting_send_html_mail(string $to, string $subject, string $htmlBody): 
             ];
         }
         $mail->CharSet = 'UTF-8';
+        $mail->Encoding = 'base64';
 
         $mail->setFrom($from, $fromName);
+        $mail->Sender = $from;
         $mail->addAddress($to);
-        $mail->addReplyTo($from, $fromName);
+        $replyTo = is_string($replyTo) ? trim($replyTo) : '';
+        if ($replyTo !== '' && filter_var($replyTo, FILTER_VALIDATE_EMAIL)) {
+            $mail->addReplyTo($replyTo, trim((string) $replyToName) ?: $replyTo);
+        } else {
+            $mail->addReplyTo($from, $fromName);
+        }
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body = $htmlBody;
-        $mail->AltBody = trim(strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", $htmlBody)));
+        $mail->AltBody = meeting_mail_plain_text($htmlBody);
         $mail->send();
         meeting_mail_last_error('SMTP accepted for: ' . $to);
+        meeting_mail_log($to, $subject, true, 'SMTP accepted.');
         return true;
     } catch (Exception $e) {
         $msg = $e->getMessage();
         meeting_mail_last_error($msg);
         error_log('[meeting_mailer] send failed to ' . $to . ': ' . $msg);
+        meeting_mail_log($to, $subject, false, $msg);
         return false;
     }
+}
+
+function meeting_mail_plain_text(string $htmlBody): string
+{
+    $text = str_replace(['<br>', '<br/>', '<br />', '</p>', '</li>'], "\n", $htmlBody);
+    $text = str_replace(['</h1>', '</h2>', '</h3>', '</div>'], "\n", $text);
+    $text = trim(html_entity_decode(strip_tags($text), ENT_QUOTES, 'UTF-8'));
+    $text = preg_replace("/[ \t]+/", ' ', $text) ?? $text;
+    $text = preg_replace("/\n{3,}/", "\n\n", $text) ?? $text;
+    return trim($text);
+}
+
+function meeting_mail_log(string $to, string $subject, bool $sent, string $message): void
+{
+    $dir = __DIR__ . '/../storage';
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0755, true);
+    }
+
+    $line = sprintf(
+        "[%s] %s to=%s subject=%s message=%s\n",
+        date('c'),
+        $sent ? 'sent' : 'failed',
+        $to,
+        str_replace(["\r", "\n"], ' ', $subject),
+        str_replace(["\r", "\n"], ' ', $message)
+    );
+
+    @file_put_contents($dir . '/meeting-mail.log', $line, FILE_APPEND | LOCK_EX);
 }
 
 function meeting_mail_allows_relaxed_tls(): bool

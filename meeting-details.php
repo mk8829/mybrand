@@ -6,16 +6,24 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-$date = isset($_REQUEST['date']) && is_string($_REQUEST['date']) ? trim($_REQUEST['date']) : '';
-$time = isset($_REQUEST['time']) && is_string($_REQUEST['time']) ? trim($_REQUEST['time']) : '';
-$timezone = isset($_REQUEST['timezone']) && is_string($_REQUEST['timezone']) ? trim($_REQUEST['timezone']) : '';
+$isPost = strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST';
+$requestData = $isPost ? $_POST : $_GET;
+
+$date = isset($requestData['date']) && is_string($requestData['date']) ? trim($requestData['date']) : '';
+$time = isset($requestData['time']) && is_string($requestData['time']) ? trim($requestData['time']) : '';
+$timezone = isset($requestData['timezone']) && is_string($requestData['timezone']) ? trim($requestData['timezone']) : '';
 
 if ($date === '' || $time === '' || $timezone === '') {
     header('Location: ' . url('meeting-schedule.php'));
     exit;
 }
 
-$tzObject = @new DateTimeZone($timezone) ?: new DateTimeZone('Asia/Kolkata');
+try {
+    $tzObject = new DateTimeZone($timezone);
+} catch (Exception $e) {
+    $timezone = 'Asia/Kolkata';
+    $tzObject = new DateTimeZone($timezone);
+}
 if (preg_match('/^\d{1,2}:\d{2}(am|pm)$/i', $time)) {
     $tmp = DateTime::createFromFormat('g:ia', strtolower($time), $tzObject);
     if ($tmp instanceof DateTime) {
@@ -37,7 +45,7 @@ $eventDisplay = $dateTime->format('g:ia') . ' - ' . $endDateTime->format('g:ia')
 $errors = [];
 $success = '';
 
-if (strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
+if ($isPost) {
     verify_csrf_or_fail();
     $name = trim((string)($_POST['name'] ?? ''));
     $email = trim((string)($_POST['email'] ?? ''));
@@ -98,7 +106,7 @@ if (strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
         ';
 
         $adminEmail = meeting_mail_admin_email();
-        $adminSent = meeting_send_html_mail($adminEmail, 'New Event Scheduled - 30 Minute Meeting', $adminBody);
+        $adminSent = meeting_send_html_mail($adminEmail, 'New Event Scheduled - 30 Minute Meeting', $adminBody, $email, $name);
         $adminStatus = meeting_mail_last_error();
 
         $userSent = meeting_send_html_mail($email, 'Meeting Confirmation - 30 Minute Meeting', $userBody);
@@ -201,7 +209,6 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
                         <img src="<?= url('assets/imgs/logo/logo.gif') ?>" class="det-logo-main" alt="Logo">
                         
                         <div class="mt-4">
-                            <img src="<?= url('assets/imgs/logo/logo.gif') ?>" class="det-avatar" alt="Avatar">
                             <div class="det-company-name">NIMISHA IMPEX WORLDWIDE (P) LIMITED</div>
                             <h1 class="det-event-title">30 Minute Meeting</h1>
                             
@@ -215,11 +222,11 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
                             </div>
                             <div class="det-meta">
                                 <i class="fa-regular fa-calendar"></i>
-                                <span><?= $eventDisplay ?></span>
+                                <span><?= e($eventDisplay) ?></span>
                             </div>
                             <div class="det-meta">
                                 <i class="fa-solid fa-earth-americas"></i>
-                                <span><?= str_replace('_', ' ', $timezone) ?></span>
+                                <span><?= e(str_replace('_', ' ', $timezone)) ?></span>
                             </div>
                         </div>
                     </div>
@@ -236,7 +243,7 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
                             <div class="alert alert-success small py-2"><?= $success ?></div>
                         <?php endif; ?>
 
-                        <form method="post">
+                        <form method="post" action="<?= url('meeting-details.php') ?>" id="meetingDetailsForm">
                             <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                             <input type="hidden" name="date" value="<?= e($date) ?>">
                             <input type="hidden" name="time" value="<?= e($time) ?>">
@@ -276,9 +283,18 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
 </section>
 
 <script>
-document.getElementById('addGuestsBtn').addEventListener('click', function() {
-    this.style.display = 'none';
-    document.getElementById('guestsWrapper').style.display = 'block';
+document.addEventListener('DOMContentLoaded', function() {
+    const addGuestsBtn = document.getElementById('addGuestsBtn');
+    const guestsWrapper = document.getElementById('guestsWrapper');
+
+    if (!addGuestsBtn || !guestsWrapper) {
+        return;
+    }
+
+    addGuestsBtn.addEventListener('click', function() {
+        this.style.display = 'none';
+        guestsWrapper.style.display = 'block';
+    });
 });
 </script>
 
