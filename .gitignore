@@ -1,4 +1,7 @@
 vendor/
+.env
+.env.*
+!.env.example
 storage/
 storage/cache/190e15372241bb022618d3aa47354db283a2af2b.cache.php
 storage/cache/190e15372241bb022618d3aa47354db283a2af2b.cache.php

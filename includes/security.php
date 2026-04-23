@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/env.php';
+
 function e(?string $value): string
 {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');

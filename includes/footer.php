@@ -1639,12 +1639,8 @@ $footerSections = cms_get_footer_sections();
         const enquiryButton = document.getElementById('site-popup-enquiry-btn');
         if (enquiryButton) {
           enquiryButton.addEventListener('click', function () {
-            closePopup(false);
-            if (typeof window.mybrandpleaseOpenEnquiryModal === 'function') {
-              window.mybrandpleaseOpenEnquiryModal();
-            } else {
-              window.location.href = '<?php echo url('contact.php'); ?>';
-            }
+            closePopup(true);
+            window.location.href = '<?php echo url('meeting-schedule.php'); ?>';
           });
         }
 
