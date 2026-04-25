@@ -8,6 +8,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 }
 $headerCategories = catalog_categories();
 $whyChoosePages = cms_get_why_choose_pages(true);
+$headerLogo = url('assets/imgs/logo/mybrandplease.gif');
 $headerCartCount = 0;
 if (!empty($_SESSION['cart']) && is_array($_SESSION['cart'])) {
     foreach ($_SESSION['cart'] as $qty) {
@@ -62,7 +63,7 @@ if (!function_exists('render_header_menu_items')) {
             <div class="offset-widget offset-header">
               <div class="offset-logo">
                 <a href="<?php echo url('index.php'); ?>">
-                  <img src="<?php echo url('assets/imgs/logo/logo.png'); ?>" alt="Beauten Logo" />
+                  <img src="<?php echo $headerLogo; ?>" alt="MyBrandPlease Logo" />
                 </a>
               </div>
               <button id="side-info-close" class="side-info-close">
@@ -173,7 +174,7 @@ if (!function_exists('render_header_menu_items')) {
               <div class="col-auto">
                 <div class="header__logo">
                   <a href="<?php echo url('index.php'); ?>">
-                    <img src="<?php echo url('assets/imgs/logo/logo.gif'); ?>" class="normal-logo" alt="Site Logo" />
+                    <img src="<?php echo $headerLogo; ?>" class="normal-logo" alt="MyBrandPlease Logo" />
                   </a>
                 </div>
               </div>

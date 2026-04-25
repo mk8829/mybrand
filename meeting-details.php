@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/security.php';
 require_once __DIR__ . '/includes/mailer.php';
+require_once __DIR__ . '/includes/google-meet.php';
 require_once __DIR__ . '/includes/url.php';
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -51,14 +52,13 @@ if ($isPost) {
     $email = trim((string)($_POST['email'] ?? ''));
     $guestsRaw = trim((string)($_POST['guests'] ?? ''));
     $notes = trim((string)($_POST['notes'] ?? ''));
-    $googleMeetLink = meeting_google_meet_link();
+    $googleMeetLink = '';
+    $guestEmails = [];
 
     if ($name === '') $errors[] = 'Name is required.';
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Valid email is required.';
-    if (!filter_var($googleMeetLink, FILTER_VALIDATE_URL)) $errors[] = 'Google Meet link is not valid.';
 
     if (!$errors) {
-        $guestEmails = [];
         if ($guestsRaw !== '') {
             $parts = preg_split('/[\s,;]+/', $guestsRaw) ?: [];
             foreach ($parts as $guest) {
@@ -77,10 +77,25 @@ if ($isPost) {
     }
 
     if (!$errors) {
+        $googleMeetLink = meeting_create_google_meet_link($dateTime, $endDateTime, $timezone, $name, $email, $guestEmails, $notes);
+        if ($googleMeetLink === null) {
+            $googleMeetLink = meeting_google_meet_link();
+        }
+    }
+
+    if (!$errors && !filter_var($googleMeetLink, FILTER_VALIDATE_URL)) {
+        $errors[] = 'Google Meet link is not valid.';
+    }
+
+    if (!$errors) {
         $guestHtml = count($guestEmails) > 0
             ? ('<ul><li>' . implode('</li><li>', array_map('e', $guestEmails)) . '</li></ul>')
             : '<p>None</p>';
         $notesHtml = $notes !== '' ? nl2br(e($notes)) : 'N/A';
+
+        $meetWarning = meeting_google_meet_last_error() !== ''
+            ? '<p><strong>Google Meet Note:</strong><br>' . e(meeting_google_meet_last_error()) . '</p>'
+            : '';
 
         $adminBody = '
             <p>Hi NIMISHA IMPEX WORLDWIDE (P) LIMITED,</p>
@@ -91,6 +106,7 @@ if ($isPost) {
             <p><strong>Additional Guests:</strong>' . $guestHtml . '</p>
             <p><strong>Event Date/Time:</strong><br>' . e($eventDisplay) . ' (' . e($timezone) . ')</p>
             <p><strong>Location:</strong><br>This is a Google Meet web conference. <a href="' . e($googleMeetLink) . '">Join now</a></p>
+            ' . $meetWarning . '
             <p><strong>Invitee Time Zone:</strong><br>' . e($timezone) . '</p>
             <p><strong>Notes:</strong><br>' . $notesHtml . '</p>
         ';
