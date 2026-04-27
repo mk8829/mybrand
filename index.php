@@ -20,10 +20,100 @@ $homeCategoryDisplay = [
       'skin-care-botanical',
     ],
   ],
-  'body-care' => ['label' => 'BODY CARE'],
-  'hair-care' => ['label' => 'HAIR CARE'],
-  'bathing-soaps' => ['label' => 'BATHING SOAPS'],
+  'body-care' => [
+    'label' => 'BODY CARE',
+    'children' => [
+      'body-care-specialty-products',
+      'body-care-body-wash-shower-gel',
+      'body-care-lotions',
+      'body-care-body-butters',
+      'body-care-salts-soaks',
+      'body-care-lip-balms-lip-scrubs',
+      'body-care-body-scrubs',
+      'body-care-manicure-pedicure',
+    ],
+  ],
+  'hair-care' => [
+    'label' => 'HAIR CARE',
+    'children' => [
+      'hair-care-bars',
+      'hair-care-shampoo',
+      'hair-care-conditioner',
+      'hair-care-styling-products',
+      'hair-care-treatment-products',
+    ],
+  ],
+  'bathing-soaps' => [
+    'label' => 'BATHING SOAPS',
+    'children' => [
+      'bathing-soaps-beauty-soaps',
+      'bathing-soaps-mens-soap',
+      'bathing-soaps-medicated-soaps',
+      'bathing-soaps-hotel-soap',
+      'bathing-soaps-novelty-soaps',
+    ],
+  ],
   'men-s-care' => ['label' => "FOR MEN'S"],
+];
+$homeCategoryCardLabels = [
+  'skin-care-environmental-defense' => 'Environmental Defense',
+  'skin-care-advanced' => 'Advanced',
+  'skin-care-age-defying' => 'Age Defying',
+  'skin-care-peptides' => 'Peptides',
+  'vitamin-c' => 'Vitamin C',
+  'skin-care-brightening' => 'Brightening',
+  'skin-care-super-fruits' => 'Super Fruits',
+  'skin-care-marine-complex' => 'Marine Complex',
+  'skin-care-blemish-prone-skin' => 'Blemish Prone Skin',
+  'skin-care-botanical' => 'Botanical',
+  'body-care-specialty-products' => 'Specialty Products',
+  'body-care-body-wash-shower-gel' => 'Body Wash & Shower Gel',
+  'body-care-lotions' => 'Lotions',
+  'body-care-body-butters' => 'Body Butters',
+  'body-care-salts-soaks' => 'Salt & Soaks',
+  'body-care-lip-balms-lip-scrubs' => 'Lip Balms & Scrubs',
+  'body-care-body-scrubs' => 'Bath & Body Scrub',
+  'body-care-manicure-pedicure' => 'Manicure & Pedicure',
+  'hair-care-bars' => 'Shampoo & Conditioner Bars',
+  'hair-care-shampoo' => 'Shampoo',
+  'hair-care-conditioner' => 'Conditioner',
+  'hair-care-styling-products' => 'Styling Products',
+  'hair-care-treatment-products' => 'Treatment Products',
+  'bathing-soaps-beauty-soaps' => 'Beauty Soaps',
+  'bathing-soaps-mens-soap' => 'Mens Soap',
+  'bathing-soaps-medicated-soaps' => 'Medicated Soap',
+  'bathing-soaps-hotel-soap' => 'Hotel Soaps',
+  'bathing-soaps-novelty-soaps' => 'Novelty Soaps',
+];
+$homeCategoryCardImages = [
+  'skin-care-environmental-defense' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Environmental-Defense-888x1024.webp',
+  'skin-care-advanced' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Advance-888x1024.webp',
+  'skin-care-age-defying' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Age-Defying-888x1024.webp',
+  'skin-care-peptides' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Peptides-888x1024.webp',
+  'vitamin-c' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Vitamin-C-888x1024.webp',
+  'skin-care-brightening' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Brightening-888x1024.webp',
+  'skin-care-super-fruits' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Super-Fruits-888x1024.webp',
+  'skin-care-marine-complex' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Marine-Complex-1-888x1024.webp',
+  'skin-care-blemish-prone-skin' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Blemish-Prone-Skin-888x1024.webp',
+  'skin-care-botanical' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Botanical-1-888x1024.webp',
+  'body-care-specialty-products' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Specialty-Products-scaled.webp',
+  'body-care-body-wash-shower-gel' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Body-Wash-Shower-Gel-scaled.webp',
+  'body-care-lotions' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Lotion-scaled.webp',
+  'body-care-body-butters' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Body-Butter-scaled.webp',
+  'body-care-salts-soaks' => 'https://mybrandplease.com/wp-content/uploads/2023/07/salt-Soaks-scaled.webp',
+  'body-care-lip-balms-lip-scrubs' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Lip-Balm-Scrubs-scaled.webp',
+  'body-care-body-scrubs' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Body-Scrubs-scaled.webp',
+  'body-care-manicure-pedicure' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Pedi-Meni-scaled.webp',
+  'hair-care-bars' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Shampoo-Conditioner-Bars-scaled.webp',
+  'hair-care-shampoo' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Shampoo-scaled.webp',
+  'hair-care-conditioner' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Conditioner-scaled.webp',
+  'hair-care-styling-products' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Styling-Products-scaled.webp',
+  'hair-care-treatment-products' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Treatment-Products-scaled.webp',
+  'bathing-soaps-beauty-soaps' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Beauty-Soaps-scaled.webp',
+  'bathing-soaps-mens-soap' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Mens-Soap-scaled.webp',
+  'bathing-soaps-medicated-soaps' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Medicated-Soap-scaled.webp',
+  'bathing-soaps-hotel-soap' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Hotel-Soaps-scaled.webp',
+  'bathing-soaps-novelty-soaps' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Novelty-Soaps-scaled.webp',
 ];
 $homeCategoryBySlug = [];
 foreach ($homeCategories as $category) {
@@ -44,6 +134,16 @@ foreach ($homeCategoryDisplay as $slug => $display) {
     usort($children, static function (array $a, array $b) use ($childOrder): int {
       return ($childOrder[(string) $a['slug']] ?? PHP_INT_MAX) <=> ($childOrder[(string) $b['slug']] ?? PHP_INT_MAX);
     });
+    foreach ($children as &$child) {
+      $childSlug = (string) ($child['slug'] ?? '');
+      if (isset($homeCategoryCardLabels[$childSlug])) {
+        $child['display_name'] = $homeCategoryCardLabels[$childSlug];
+      }
+      if (isset($homeCategoryCardImages[$childSlug])) {
+        $child['image'] = $homeCategoryCardImages[$childSlug];
+      }
+    }
+    unset($child);
     $category['subcategories'] = $children;
   }
   $homeCategories[] = $category;
@@ -245,6 +345,120 @@ function closeLogoutMessage() {
           </div>
         </section>
 
+        <style>
+          .category-section .cat-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 24px 32px;
+            max-width: 1056px;
+            margin: 0 auto;
+          }
+          .category-section .cat-card {
+            position: relative;
+            display: block;
+            border-radius: 8px;
+            aspect-ratio: 216 / 291;
+            perspective: 768px;
+            text-decoration: none;
+            box-shadow: 0 14px 30px rgba(34, 34, 34, 0.12);
+          }
+          .category-section .cat-card__flip {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 100%;
+            min-height: 250px;
+            border-radius: 8px;
+            transform-style: preserve-3d;
+            transition: transform 0.7s ease;
+          }
+          .category-section .cat-card__face {
+            position: absolute;
+            inset: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+          }
+          .category-section .cat-card__face--front {
+            background: #f7f7f7;
+          }
+          .category-section .cat-card__face--back {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: #ebebeb;
+            transform: rotateY(180deg);
+            text-align: center;
+          }
+          .category-section .cat-card__back-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+          }
+          .category-section .cat-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.35s ease;
+          }
+          .category-section .cat-overlay {
+            display: none;
+          }
+          .category-section .cat-title {
+            margin: 0;
+            color: #ff508b;
+            font-family: "Abril Fatface", serif;
+            font-size: 22px;
+            font-weight: 400;
+            line-height: 1.25;
+            text-align: center;
+            max-width: 130px;
+          }
+          .category-section .cat-title--back {
+            color: #ff508b;
+          }
+          @media (hover: hover) and (pointer: fine) {
+            .category-section .cat-card:hover .cat-card__flip,
+            .category-section .cat-card:focus-visible .cat-card__flip {
+              transform: rotateY(180deg);
+            }
+            .category-section .cat-card:hover .cat-image,
+            .category-section .cat-card:focus-visible .cat-image {
+              transform: scale(1.03);
+            }
+            .category-section .cat-card:hover,
+            .category-section .cat-card:focus-visible {
+              box-shadow: 0 18px 38px rgba(34, 34, 34, 0.16);
+            }
+          }
+          @media (max-width: 1199px) {
+            .category-section .cat-grid {
+              grid-template-columns: repeat(4, minmax(0, 1fr));
+              gap: 22px 24px;
+            }
+          }
+          @media (max-width: 991px) {
+            .category-section .cat-grid {
+              grid-template-columns: repeat(3, minmax(0, 1fr));
+              gap: 20px;
+            }
+          }
+          @media (max-width: 767px) {
+            .category-section .cat-grid {
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+              gap: 16px;
+            }
+            .category-section .cat-card__flip {
+              min-height: 210px;
+            }
+            .category-section .cat-title--back {
+              font-size: 20px;
+            }
+          }
+        </style>
 
         <section class="category-section section-spacing-120 rr-ov-hidden pt-0">
           <div class="container rr-container-1350">
@@ -280,24 +494,30 @@ function closeLogoutMessage() {
                 const active = categories.find((c) => c.slug === slug) || categories[0];
                 const items = Array.isArray(active.subcategories) && active.subcategories.length
                   ? active.subcategories.map((s) => ({
-                      name: s.name,
+                      name: s.display_name || s.name,
                       slug: s.slug,
                       image: s.image || active.image,
                       href: <?= json_encode(url('shop.php'), JSON_UNESCAPED_SLASHES) ?> + '?category=' + encodeURIComponent(active.slug) + '&subcategory=' + encodeURIComponent(s.slug)
                     }))
                   : [{
-                      name: active.name,
+                      name: active.display_name || active.name,
                       slug: active.slug,
                       image: active.image,
                       href: <?= json_encode(url('shop.php'), JSON_UNESCAPED_SLASHES) ?> + '?category=' + encodeURIComponent(active.slug)
                     }];
 
                 const cards = items.map((item) => `
-                  <a href="${item.href}" class="cat-card">
-                    <img src="${toUrl(item.image)}" class="cat-image" alt="${esc(item.name)}">
-                    <div class="cat-overlay">
-                      <h3 class="cat-title">${esc(item.name)}</h3>
-                    </div>
+                  <a href="${item.href}" class="cat-card" aria-label="${esc(item.name)}">
+                    <span class="cat-card__flip">
+                      <span class="cat-card__face cat-card__face--front">
+                        <img src="${toUrl(item.image)}" class="cat-image" alt="${esc(item.name)}">
+                      </span>
+                      <span class="cat-card__face cat-card__face--back" aria-hidden="true">
+                        <span class="cat-card__back-inner">
+                          <h3 class="cat-title cat-title--back">${esc(item.name)}</h3>
+                        </span>
+                      </span>
+                    </span>
                   </a>
                 `).join('');
                 grid.innerHTML =cards;
