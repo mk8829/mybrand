@@ -1589,32 +1589,31 @@ $footerSections = cms_get_footer_sections();
         }
       })();
 
-      // Site visit popup: show twice per page load, first after 15s, second after 1 minute.
+      // Site visit popup: show only once per page load after 15 seconds.
       (function () {
         const popup = document.getElementById('site-visit-popup');
         if (!popup) return;
 
         const firstDelayMs = 15000;
-        const repeatDelayMs = 60000;
-        const maxShows = 2;
         let timerId = 0;
-        let showCount = 0;
+        let hasShownPopup = false;
 
-        function scheduleNextPopup(delay) {
-          if (showCount >= maxShows) return;
+        function schedulePopup(delay) {
+          if (hasShownPopup) return;
           if (timerId) window.clearTimeout(timerId);
           timerId = window.setTimeout(openPopup, delay);
         }
 
         function openPopup() {
-          if (showCount >= maxShows) return;
+          if (hasShownPopup) return;
           if (popup.classList.contains('is-open')) return;
           const enquiryModal = document.getElementById('enquiry-modal');
           if (enquiryModal && enquiryModal.classList.contains('is-open')) {
-            scheduleNextPopup(repeatDelayMs);
+            schedulePopup(firstDelayMs);
             return;
           }
-          showCount += 1;
+          hasShownPopup = true;
+          timerId = 0;
           popup.classList.add('is-open');
           popup.setAttribute('aria-hidden', 'false');
           document.body.style.overflow = 'hidden';
@@ -1626,10 +1625,9 @@ $footerSections = cms_get_footer_sections();
           if (restoreScroll !== false) {
             document.body.style.overflow = '';
           }
-          scheduleNextPopup(repeatDelayMs);
         }
 
-        scheduleNextPopup(firstDelayMs);
+        schedulePopup(firstDelayMs);
 
         popup.querySelectorAll('[data-site-popup-close]').forEach(function (trigger) {
           trigger.addEventListener('click', function () {
