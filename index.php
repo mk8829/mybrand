@@ -38,7 +38,9 @@ $homeCategoryDisplay = [
     'children' => [
       'hair-care-bars',
       'hair-care-shampoo',
+      'shampoo',
       'hair-care-conditioner',
+      'conditioners',
       'hair-care-styling-products',
       'hair-care-treatment-products',
     ],
@@ -54,6 +56,19 @@ $homeCategoryDisplay = [
     ],
   ],
   'men-s-care' => ['label' => "FOR MEN'S"],
+  'especially-for-men' => ['label' => "FOR MEN'S"],
+  'fragrances' => ['label' => 'FRAGRANCES'],
+  'packaging' => ['label' => 'PACKAGING'],
+  'perfumes' => ['label' => 'PERFUMES'],
+  'aerosols' => ['label' => 'AEROSOLS'],
+];
+$homeCategoryPriority = [
+  'skin-care',
+  'body-care',
+  'hair-care',
+  'bathing-soaps',
+  'men-s-care',
+  'perfumes',
 ];
 $homeCategoryCardLabels = [
   'skin-care-environmental-defense' => 'Environmental Defense',
@@ -104,11 +119,13 @@ $homeCategoryCardImages = [
   'body-care-lip-balms-lip-scrubs' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Lip-Balm-Scrubs-scaled.webp',
   'body-care-body-scrubs' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Body-Scrubs-scaled.webp',
   'body-care-manicure-pedicure' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Pedi-Meni-scaled.webp',
-  'hair-care-bars' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Shampoo-Conditioner-Bars-scaled.webp',
-  'hair-care-shampoo' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Shampoo-scaled.webp',
-  'hair-care-conditioner' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Conditioner-scaled.webp',
-  'hair-care-styling-products' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Styling-Products-scaled.webp',
-  'hair-care-treatment-products' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Treatment-Products-scaled.webp',
+  'hair-care-bars' => 'https://mybrandplease.com/wp-content/uploads/2023/05/Shampoo-Bars-min.png',
+  'hair-care-shampoo' => 'https://mybrandplease.com/wp-content/uploads/2023/05/Shampoo-min.png',
+  'shampoo' => 'https://mybrandplease.com/wp-content/uploads/2023/05/Shampoo-min.png',
+  'hair-care-conditioner' => 'https://mybrandplease.com/wp-content/uploads/2023/05/conditioner-min.png',
+  'conditioners' => 'https://mybrandplease.com/wp-content/uploads/2023/05/conditioner-min.png',
+  'hair-care-styling-products' => 'https://mybrandplease.com/wp-content/uploads/2023/05/Styling-Products-min.png',
+  'hair-care-treatment-products' => 'https://mybrandplease.com/wp-content/uploads/2023/05/hair-treatment-min.png',
   'bathing-soaps-beauty-soaps' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Beauty-Soaps-scaled.webp',
   'bathing-soaps-mens-soap' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Mens-Soap-scaled.webp',
   'bathing-soaps-medicated-soaps' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Medicated-Soap-scaled.webp',
@@ -119,21 +136,43 @@ $homeCategoryBySlug = [];
 foreach ($homeCategories as $category) {
   $homeCategoryBySlug[(string) $category['slug']] = $category;
 }
+
+$orderedHomeCategorySlugs = [];
+foreach ($homeCategoryPriority as $slug) {
+  if (isset($homeCategoryBySlug[$slug])) {
+    $orderedHomeCategorySlugs[] = $slug;
+  }
+}
+foreach ($homeCategoryBySlug as $slug => $category) {
+  if (!in_array($slug, $orderedHomeCategorySlugs, true)) {
+    $orderedHomeCategorySlugs[] = $slug;
+  }
+}
+$orderedHomeCategorySlugs = array_slice($orderedHomeCategorySlugs, 0, 6);
+
 $homeCategories = [];
-foreach ($homeCategoryDisplay as $slug => $display) {
+foreach ($orderedHomeCategorySlugs as $slug) {
   if (!isset($homeCategoryBySlug[$slug])) {
     continue;
   }
+  $display = $homeCategoryDisplay[$slug] ?? [];
   $category = $homeCategoryBySlug[$slug];
-  $category['display_name'] = $display['label'];
-  if (!empty($display['children']) && !empty($category['subcategories'])) {
-    $childOrder = array_flip($display['children']);
-    $children = array_values(array_filter($category['subcategories'], static function (array $child) use ($childOrder): bool {
-      return isset($childOrder[(string) $child['slug']]);
-    }));
-    usort($children, static function (array $a, array $b) use ($childOrder): int {
-      return ($childOrder[(string) $a['slug']] ?? PHP_INT_MAX) <=> ($childOrder[(string) $b['slug']] ?? PHP_INT_MAX);
-    });
+  $category['display_name'] = (string) ($display['label'] ?? strtoupper((string) $category['name']));
+  $cards = [];
+  if (!empty($category['subcategories'])) {
+    $children = array_values((array) $category['subcategories']);
+    if (!empty($display['children'])) {
+      $childOrder = array_flip((array) $display['children']);
+      $preferredChildren = array_values(array_filter($children, static function (array $child) use ($childOrder): bool {
+        return isset($childOrder[(string) $child['slug']]);
+      }));
+      if (!empty($preferredChildren)) {
+        usort($preferredChildren, static function (array $a, array $b) use ($childOrder): int {
+          return ($childOrder[(string) $a['slug']] ?? PHP_INT_MAX) <=> ($childOrder[(string) $b['slug']] ?? PHP_INT_MAX);
+        });
+        $children = $preferredChildren;
+      }
+    }
     foreach ($children as &$child) {
       $childSlug = (string) ($child['slug'] ?? '');
       if (isset($homeCategoryCardLabels[$childSlug])) {
@@ -145,8 +184,41 @@ foreach ($homeCategoryDisplay as $slug => $display) {
     }
     unset($child);
     $category['subcategories'] = $children;
+    if (count($children) >= 4) {
+      $cards = array_map(static function (array $child) use ($category): array {
+        return [
+          'name' => (string) ($child['display_name'] ?? $child['name'] ?? ''),
+          'image' => (string) ($child['image'] ?? $category['image'] ?? 'assets/imgs/product/skin-care.webp'),
+          'href' => url('shop.php') . '?category=' . rawurlencode((string) ($category['slug'] ?? '')) . '&subcategory=' . rawurlencode((string) ($child['slug'] ?? '')),
+        ];
+      }, array_slice($children, 0, 10));
+    }
   }
+  if (empty($cards)) {
+    $productCards = array_slice(catalog_filtered_products((string) $category['slug'], null, null), 0, 10);
+    foreach ($productCards as $product) {
+      $cards[] = [
+        'name' => (string) ($product['name'] ?? ''),
+        'image' => (string) ($product['image'] ?? $category['image'] ?? 'assets/imgs/product/skin-care.webp'),
+        'href' => url('product-details.php') . '?slug=' . rawurlencode((string) ($product['slug'] ?? '')),
+      ];
+    }
+  }
+  if (empty($cards)) {
+    $cards[] = [
+      'name' => (string) $category['display_name'],
+      'image' => (string) ($category['image'] ?? 'assets/imgs/product/skin-care.webp'),
+      'href' => url('shop.php') . '?category=' . rawurlencode((string) $category['slug']),
+    ];
+  }
+  $category['home_cards'] = $cards;
   $homeCategories[] = $category;
+}
+
+$homeInitialCategory = $homeCategories[0] ?? null;
+$homeInitialItems = [];
+if ($homeInitialCategory) {
+  $homeInitialItems = (array) ($homeInitialCategory['home_cards'] ?? []);
 }
 $homeSlides = cms_get_home_slides();
 $homeTestimonials = cms_get_home_testimonials();
@@ -347,9 +419,9 @@ function closeLogoutMessage() {
 
         <style>
           .category-section .cat-grid {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(5, minmax(0, 1fr));
             gap: 24px 32px;
-            max-width: 1056px;
+            max-width: 1360px;
             margin: 0 auto;
           }
           .category-section .cat-card {
@@ -470,7 +542,27 @@ function closeLogoutMessage() {
               <?php endforeach; ?>
             </div>
 
-            <div class="cat-grid" id="homeCategoryGrid"></div>
+            <div class="cat-grid" id="homeCategoryGrid">
+              <?php foreach ($homeInitialItems as $item): ?>
+                <?php
+                  $itemName = (string) ($item['name'] ?? '');
+                  $itemImage = (string) ($item['image'] ?? ($homeInitialCategory['image'] ?? 'assets/imgs/product/skin-care.webp'));
+                  $itemHref = (string) ($item['href'] ?? url('shop.php') . '?category=' . rawurlencode((string) ($homeInitialCategory['slug'] ?? '')));
+                ?>
+                <a href="<?= htmlspecialchars($itemHref, ENT_QUOTES, 'UTF-8') ?>" class="cat-card" aria-label="<?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>">
+                  <span class="cat-card__flip">
+                    <span class="cat-card__face cat-card__face--front">
+                      <img src="<?= htmlspecialchars(url($itemImage), ENT_QUOTES, 'UTF-8') ?>" class="cat-image" alt="<?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>">
+                    </span>
+                    <span class="cat-card__face cat-card__face--back" aria-hidden="true">
+                      <span class="cat-card__back-inner">
+                        <h3 class="cat-title cat-title--back"><?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?></h3>
+                      </span>
+                    </span>
+                  </span>
+                </a>
+              <?php endforeach; ?>
+            </div>
           </div>
 
           <script>
@@ -492,16 +584,10 @@ function closeLogoutMessage() {
 
               function renderCards(slug) {
                 const active = categories.find((c) => c.slug === slug) || categories[0];
-                const items = Array.isArray(active.subcategories) && active.subcategories.length
-                  ? active.subcategories.map((s) => ({
-                      name: s.display_name || s.name,
-                      slug: s.slug,
-                      image: s.image || active.image,
-                      href: <?= json_encode(url('shop.php'), JSON_UNESCAPED_SLASHES) ?> + '?category=' + encodeURIComponent(active.slug) + '&subcategory=' + encodeURIComponent(s.slug)
-                    }))
+                const items = Array.isArray(active.home_cards) && active.home_cards.length
+                  ? active.home_cards
                   : [{
                       name: active.display_name || active.name,
-                      slug: active.slug,
                       image: active.image,
                       href: <?= json_encode(url('shop.php'), JSON_UNESCAPED_SLASHES) ?> + '?category=' + encodeURIComponent(active.slug)
                     }];
@@ -520,7 +606,12 @@ function closeLogoutMessage() {
                     </span>
                   </a>
                 `).join('');
-                grid.innerHTML =cards;
+                grid.innerHTML = cards;
+                if (window.AOS && typeof window.AOS.refreshHard === 'function') {
+                  window.AOS.refreshHard();
+                } else if (window.AOS && typeof window.AOS.refresh === 'function') {
+                  window.AOS.refresh();
+                }
               }
 
               tabsWrap.addEventListener('click', function(e){
