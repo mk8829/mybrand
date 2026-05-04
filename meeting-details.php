@@ -81,7 +81,7 @@ if ($isPost) {
         $googleMeetLink = meeting_create_google_meet_link($dateTime, $endDateTime, $timezone, $name, $email, $guestEmails, $notes);
         if ($googleMeetLink === null || !filter_var($googleMeetLink, FILTER_VALIDATE_URL)) {
             $setupLink = url('google-calendar-connect.php');
-            $errors[] = 'Could not create a new Google Meet link. ' . e(meeting_google_meet_last_error() !== '' ? meeting_google_meet_last_error() : 'Please configure Google Calendar integration first.') . ' <a href="' . e($setupLink) . '">Set up Google Calendar here</a>.';
+            $errors[] = 'Could not create a new Google Meet link. ' . e(meeting_google_meet_last_error() !== '' ? meeting_google_meet_last_error() : 'Please configure Google Calendar integration first.') . ' If client ID and secret are already saved, complete the Google OAuth connect step so a refresh token is stored. <a href="' . e($setupLink) . '">Open Google Calendar setup</a>.';
         }
     }
 
@@ -139,6 +139,12 @@ if ($isPost) {
         }
     }
 }
+
+$meta = [
+    'title' => 'Meeting Details | Mybrandplease',
+    'description' => 'Enter your details to confirm and schedule a meeting.',
+    'canonical' => 'meeting-details.php',
+];
 
 include 'includes/head.php';
 include 'includes/header.php';

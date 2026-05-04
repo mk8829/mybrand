@@ -73,17 +73,25 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
     $clientId = trim((string) ($_POST['client_id'] ?? ''));
     $clientSecret = trim((string) ($_POST['client_secret'] ?? ''));
     $calendarId = trim((string) ($_POST['calendar_id'] ?? 'primary'));
+    $refreshToken = trim((string) ($_POST['refresh_token'] ?? ''));
 
     if ($clientId === '' || $clientSecret === '') {
         $errors[] = 'Google Client ID and Client Secret are required.';
     } else {
-        $saved = google_calendar_update_env_file($envPath, [
+        $updates = [
             'GOOGLE_CALENDAR_CLIENT_ID' => $clientId,
             'GOOGLE_CALENDAR_CLIENT_SECRET' => $clientSecret,
             'GOOGLE_CALENDAR_ID' => $calendarId !== '' ? $calendarId : 'primary',
-        ]);
+        ];
+        if ($refreshToken !== '') {
+            $updates['GOOGLE_CALENDAR_REFRESH_TOKEN'] = $refreshToken;
+        }
+
+        $saved = google_calendar_update_env_file($envPath, $updates);
         if ($saved) {
-            $messages[] = 'Google Calendar client settings saved. Click Connect Google Calendar below.';
+            $messages[] = $refreshToken !== ''
+                ? 'Google Calendar settings and refresh token saved.'
+                : 'Google Calendar client settings saved. Click Connect Google Calendar below.';
         } else {
             $errors[] = 'Could not save Google Calendar settings to .env.';
         }
@@ -94,6 +102,10 @@ $oauthState = isset($_GET['state']) && is_string($_GET['state']) ? trim($_GET['s
 $oauthCode = isset($_GET['code']) && is_string($_GET['code']) ? trim($_GET['code']) : '';
 $oauthError = isset($_GET['error']) && is_string($_GET['error']) ? trim($_GET['error']) : '';
 $oauthAction = isset($_GET['action']) && is_string($_GET['action']) ? trim($_GET['action']) : '';
+$hasClientId = trim((string) getenv('GOOGLE_CALENDAR_CLIENT_ID')) !== '';
+$hasClientSecret = trim((string) getenv('GOOGLE_CALENDAR_CLIENT_SECRET')) !== '';
+$hasRefreshToken = trim((string) getenv('GOOGLE_CALENDAR_REFRESH_TOKEN')) !== '';
+$isCalendarReady = $hasClientId && $hasClientSecret && $hasRefreshToken;
 
 if ($oauthError !== '') {
     $errors[] = 'Google authorization failed: ' . e($oauthError);
@@ -149,6 +161,10 @@ include 'includes/header.php';
 .gc-btn { display: inline-flex; align-items: center; gap: 10px; border: none; border-radius: 999px; padding: 13px 22px; background: #006bff; color: #fff; font-weight: 700; text-decoration: none; }
 .gc-btn:hover { color: #fff; background: #0057d1; }
 .gc-code { word-break: break-all; background: #fff; border: 1px dashed #d6d6d6; border-radius: 10px; padding: 12px; }
+.gc-status { border-radius: 14px; padding: 16px 18px; margin-bottom: 20px; font-weight: 600; }
+.gc-status.ready { background: #ecfdf3; border: 1px solid #b7ebc6; color: #166534; }
+.gc-status.pending { background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; }
+.gc-help { font-size: 14px; color: #666; margin-top: 8px; }
 </style>
 
 <section class="gc-wrap">
@@ -164,6 +180,12 @@ include 'includes/header.php';
         <div class="alert alert-success"><?= e($message) ?></div>
       <?php endforeach; ?>
 
+      <div class="gc-status <?= $isCalendarReady ? 'ready' : 'pending' ?>">
+        <?= $isCalendarReady
+          ? 'Google Calendar is connected. Meeting form can now create fresh Google Meet links automatically.'
+          : 'Client credentials are ' . (($hasClientId && $hasClientSecret) ? 'saved' : 'not saved yet') . ', but Google OAuth connection is incomplete until a refresh token is generated.' ?>
+      </div>
+
       <div class="gc-box">
         <div class="gc-label">Redirect URI for Google Console</div>
         <div class="gc-code"><?= e(google_calendar_redirect_uri()) ?></div>
@@ -177,11 +199,16 @@ include 'includes/header.php';
         </div>
         <div class="gc-box">
           <label class="gc-label" for="client_secret">Google Client Secret</label>
-          <input id="client_secret" name="client_secret" class="gc-input" value="<?= e((string) getenv('GOOGLE_CALENDAR_CLIENT_SECRET')) ?>" required>
+          <input id="client_secret" name="client_secret" type="password" class="gc-input" value="<?= e((string) getenv('GOOGLE_CALENDAR_CLIENT_SECRET')) ?>" autocomplete="off" required>
         </div>
         <div class="gc-box">
           <label class="gc-label" for="calendar_id">Google Calendar ID</label>
           <input id="calendar_id" name="calendar_id" class="gc-input" value="<?= e((string) getenv('GOOGLE_CALENDAR_ID') ?: 'primary') ?>">
+        </div>
+        <div class="gc-box">
+          <label class="gc-label" for="refresh_token">Google Refresh Token (optional manual paste)</label>
+          <input id="refresh_token" name="refresh_token" type="password" class="gc-input" value="<?= e((string) getenv('GOOGLE_CALENDAR_REFRESH_TOKEN')) ?>" autocomplete="off">
+          <div class="gc-help">Agar aapke paas refresh token already hai, yahan paste karke direct save kar sakte hain. Nahi hai to neeche wala connect flow use karein.</div>
         </div>
         <button type="submit" class="gc-btn">Save Google Settings</button>
       </form>
