@@ -1589,23 +1589,40 @@ $footerSections = cms_get_footer_sections();
         }
       })();
 
-      // Site visit popup: show only once per page load after 15 seconds.
+      // Site visit popup: once dismissed, do not show it again for this browser.
       (function () {
         const popup = document.getElementById('site-visit-popup');
         if (!popup) return;
 
         const firstDelayMs = 15000;
+        const popupDismissedKey = 'mybrandplease_site_visit_popup_dismissed';
         let timerId = 0;
         let hasShownPopup = false;
 
+        function isPopupDismissed() {
+          try {
+            return window.localStorage.getItem(popupDismissedKey) === '1';
+          } catch (error) {
+            return false;
+          }
+        }
+
+        function markPopupDismissed() {
+          try {
+            window.localStorage.setItem(popupDismissedKey, '1');
+          } catch (error) {
+            // Ignore storage failures and continue gracefully.
+          }
+        }
+
         function schedulePopup(delay) {
-          if (hasShownPopup) return;
+          if (hasShownPopup || isPopupDismissed()) return;
           if (timerId) window.clearTimeout(timerId);
           timerId = window.setTimeout(openPopup, delay);
         }
 
         function openPopup() {
-          if (hasShownPopup) return;
+          if (hasShownPopup || isPopupDismissed()) return;
           if (popup.classList.contains('is-open')) return;
           const enquiryModal = document.getElementById('enquiry-modal');
           if (enquiryModal && enquiryModal.classList.contains('is-open')) {
@@ -1619,33 +1636,38 @@ $footerSections = cms_get_footer_sections();
           document.body.style.overflow = 'hidden';
         }
 
-        function closePopup(restoreScroll) {
+        function closePopup(restoreScroll, persistDismissal) {
           popup.classList.remove('is-open');
           popup.setAttribute('aria-hidden', 'true');
+          if (persistDismissal) {
+            markPopupDismissed();
+          }
           if (restoreScroll !== false) {
             document.body.style.overflow = '';
           }
         }
 
-        schedulePopup(firstDelayMs);
+        if (!isPopupDismissed()) {
+          schedulePopup(firstDelayMs);
+        }
 
         popup.querySelectorAll('[data-site-popup-close]').forEach(function (trigger) {
           trigger.addEventListener('click', function () {
-            closePopup(true);
+            closePopup(true, true);
           });
         });
 
         const enquiryButton = document.getElementById('site-popup-enquiry-btn');
         if (enquiryButton) {
           enquiryButton.addEventListener('click', function () {
-            closePopup(true);
+            closePopup(true, true);
             window.location.href = '<?php echo url('meeting-schedule.php'); ?>';
           });
         }
 
         document.addEventListener('keydown', function (event) {
           if (event.key === 'Escape' && popup.classList.contains('is-open')) {
-            closePopup(true);
+            closePopup(true, true);
           }
         });
       })();
