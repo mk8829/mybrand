@@ -45,6 +45,7 @@ $eventDisplay = $dateTime->format('g:ia') . ' - ' . $endDateTime->format('g:ia')
 
 $errors = [];
 $success = '';
+$createdMeetingLink = '';
 
 if ($isPost) {
     verify_csrf_or_fail();
@@ -78,16 +79,14 @@ if ($isPost) {
 
     if (!$errors) {
         $googleMeetLink = meeting_create_google_meet_link($dateTime, $endDateTime, $timezone, $name, $email, $guestEmails, $notes);
-        if ($googleMeetLink === null) {
-            $googleMeetLink = meeting_google_meet_link();
+        if ($googleMeetLink === null || !filter_var($googleMeetLink, FILTER_VALIDATE_URL)) {
+            $setupLink = url('google-calendar-connect.php');
+            $errors[] = 'Could not create a new Google Meet link. ' . e(meeting_google_meet_last_error() !== '' ? meeting_google_meet_last_error() : 'Please configure Google Calendar integration first.') . ' <a href="' . e($setupLink) . '">Set up Google Calendar here</a>.';
         }
     }
 
-    if (!$errors && !filter_var($googleMeetLink, FILTER_VALIDATE_URL)) {
-        $errors[] = 'Google Meet link is not valid.';
-    }
-
     if (!$errors) {
+        $createdMeetingLink = $googleMeetLink;
         $guestHtml = count($guestEmails) > 0
             ? ('<ul><li>' . implode('</li><li>', array_map('e', $guestEmails)) . '</li></ul>')
             : '<p>None</p>';
@@ -129,7 +128,7 @@ if ($isPost) {
         $userStatus = meeting_mail_last_error();
 
         if ($adminSent && $userSent) {
-            $success = 'Schedule Event completed. SMTP accepted both emails.';
+            $success = 'Meeting scheduled successfully. Your Google Meet link is ready below.';
         } else {
             if (!$adminSent) {
                 $errors[] = 'Admin email failed (' . e($adminEmail) . '): ' . e($adminStatus);
@@ -257,6 +256,18 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
                         <?php endif; ?>
                         <?php if ($success): ?>
                             <div class="alert alert-success small py-2"><?= $success ?></div>
+                            <?php if ($createdMeetingLink !== ''): ?>
+                                <div class="alert alert-light border py-3 px-3 mb-3">
+                                    <div class="fw-bold mb-2">Join Meeting Link</div>
+                                    <div class="small mb-3">
+                                        <a href="<?= e($createdMeetingLink) ?>" target="_blank" rel="noopener noreferrer"><?= e($createdMeetingLink) ?></a>
+                                    </div>
+                                    <a href="<?= e($createdMeetingLink) ?>" target="_blank" rel="noopener noreferrer" class="btn-schedule d-inline-flex align-items-center gap-2 text-decoration-none">
+                                        <span>Join Meeting</span>
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                    </a>
+                                </div>
+                            <?php endif; ?>
                         <?php endif; ?>
 
                         <form method="post" action="<?= url('meeting-details.php') ?>" id="meetingDetailsForm">
