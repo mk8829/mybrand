@@ -21,13 +21,12 @@ $footerSections = cms_get_footer_sections();
                   <div class="plf-follow mt-4">
                     <a href="<?php echo url('contact.php'); ?>" class="plf-follow-btn">FOLLOW US <i class="fa-solid fa-user"></i></a>
                   <div class="plf-social mt-3">
-                    <a href="<?php echo url('contact.php'); ?>" aria-label="Youtube"><i class="fa-brands fa-youtube"></i></a>
-                    <a href="<?php echo url('contact.php'); ?>" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="<?php echo url('contact.php'); ?>" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="https://www.tiktok.com/@mybrandplease.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-                    <a href="<?php echo url('contact.php'); ?>" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a href="<?php echo url('contact.php'); ?>" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                    <a href="<?php echo url('contact.php'); ?>" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
+                    <a href="https://www.youtube.com/@mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="https://www.facebook.com/mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/mybrandplease_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://x.com/mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="https://www.linkedin.com/in/mybrandplease/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="https://in.pinterest.com/mybrandplease/" target="_blank" rel="noopener noreferrer" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
                   </div>
                 </div>
                 <div class="plf-review mt-4">
@@ -95,7 +94,7 @@ $footerSections = cms_get_footer_sections();
           </div>
 
           <div class="plf-bottom d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
-            <p class="mb-0">&copy; 2005-2026 NIMISHA IMPEX WORLDWIDE (P) LIMITED | All rights reserved</p>
+            <p class="mb-0">&copy; 2005-2026 NIMISHA IMPEX WORLDWIDE (P) LIMITED &bull; All rights reserved</p>
             <p class="mb-0">Celebrating 21 Years of Private Labelling Excellence</p>
           </div>
         </div>
@@ -893,8 +892,14 @@ $footerSections = cms_get_footer_sections();
         const trigger = document.getElementById('header-language-trigger');
         const list = document.getElementById('header-language-list');
         const label = wrap && wrap.querySelector('.header-area-1__language-label');
+        const currentFlag = wrap && wrap.querySelector('[data-language-flag-current]');
         const hiddenInput = document.getElementById('header-language-value');
         if (!wrap || !trigger || !list || !hiddenInput) return;
+
+        function setCurrentFlag(flagClass) {
+          if (!currentFlag) return;
+          currentFlag.className = 'header-lang-switcher__flag ' + (flagClass || 'flag-en');
+        }
 
         function open() {
           wrap.classList.add('is-open');
@@ -923,12 +928,19 @@ $footerSections = cms_get_footer_sections();
           option.addEventListener('click', function (e) {
             e.preventDefault();
             const value = this.getAttribute('data-value');
-            const text = this.textContent.trim();
+            const text = this.getAttribute('data-label') || this.textContent.trim();
+            const flagClass = this.getAttribute('data-flag-class') || 'flag-en';
             if (hiddenInput) hiddenInput.value = value;
             if (label) label.textContent = text;
+            setCurrentFlag(flagClass);
             list.querySelectorAll('.header-area-1__language-option').forEach(function (opt) {
-              opt.setAttribute('aria-selected', opt === option ? 'true' : 'false');
+              const isSelected = opt === option;
+              opt.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+              opt.classList.toggle('is-active', isSelected);
             });
+            if (typeof window.mybrandpleaseApplyLanguage === 'function') {
+              window.mybrandpleaseApplyLanguage(value);
+            }
             close();
           });
         });
@@ -938,6 +950,111 @@ $footerSections = cms_get_footer_sections();
             close();
           }
         });
+      })();
+
+      (function () {
+        const wrap = document.getElementById('header-language-wrap');
+        const hiddenInput = document.getElementById('header-language-value');
+        if (!wrap || !hiddenInput) return;
+
+        const storageKey = 'mybrandplease_selected_language';
+        const label = wrap.querySelector('.header-area-1__language-label');
+        const currentFlag = wrap.querySelector('[data-language-flag-current]');
+
+        function setCurrentFlag(flagClass) {
+          if (!currentFlag) return;
+          currentFlag.className = 'header-lang-switcher__flag ' + (flagClass || 'flag-en');
+        }
+
+        function setSelectedOption(lang) {
+          const target = wrap.querySelector('.header-area-1__language-option[data-value="' + lang + '"]')
+            || wrap.querySelector('.header-area-1__language-option[data-value="en"]');
+          if (!target) return;
+
+          const nextLang = target.getAttribute('data-value') || 'en';
+          const nextLabel = target.getAttribute('data-label') || nextLang.toUpperCase();
+          const nextFlagClass = target.getAttribute('data-flag-class') || 'flag-en';
+
+          hiddenInput.value = nextLang;
+          if (label) label.textContent = nextLabel;
+          setCurrentFlag(nextFlagClass);
+
+          wrap.querySelectorAll('.header-area-1__language-option').forEach(function (option) {
+            const isSelected = option === target;
+            option.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+            option.classList.toggle('is-active', isSelected);
+          });
+        }
+
+        function triggerGoogleTranslate(lang) {
+          const select = document.querySelector('.goog-te-combo');
+          if (!select) return false;
+          select.value = lang === 'en' ? '' : lang;
+          select.dispatchEvent(new Event('change'));
+          return true;
+        }
+
+        window.mybrandpleaseApplyLanguage = function (lang) {
+          const nextLang = lang || 'en';
+          setSelectedOption(nextLang);
+          try {
+            window.localStorage.setItem(storageKey, nextLang);
+          } catch (error) {
+            // Ignore storage issues and continue.
+          }
+
+          let attempts = 0;
+          const maxAttempts = 20;
+          const attemptInterval = window.setInterval(function () {
+            attempts += 1;
+            if (triggerGoogleTranslate(nextLang) || attempts >= maxAttempts) {
+              window.clearInterval(attemptInterval);
+            }
+          }, 250);
+        };
+
+        window.googleTranslateElementInit = function () {
+          if (!window.google || !window.google.translate || !window.google.translate.TranslateElement) return;
+          if (!document.querySelector('#google_translate_element .goog-te-combo')) {
+            new window.google.translate.TranslateElement({
+              pageLanguage: 'en',
+              includedLanguages: 'ar,fr,es',
+              autoDisplay: false
+            }, 'google_translate_element');
+          }
+
+          const storedLanguage = (function () {
+            try {
+              return window.localStorage.getItem(storageKey) || hiddenInput.value || 'en';
+            } catch (error) {
+              return hiddenInput.value || 'en';
+            }
+          })();
+
+          window.setTimeout(function () {
+            window.mybrandpleaseApplyLanguage(storedLanguage);
+          }, 500);
+        };
+
+        const initialLanguage = (function () {
+          try {
+            return window.localStorage.getItem(storageKey) || hiddenInput.value || 'en';
+          } catch (error) {
+            return hiddenInput.value || 'en';
+          }
+        })();
+
+        setSelectedOption(initialLanguage);
+
+        if (!document.querySelector('script[data-google-translate-script]')) {
+          const script = document.createElement('script');
+          script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+          script.async = true;
+          script.setAttribute('data-google-translate-script', 'true');
+          document.body.appendChild(script);
+        } else if (document.querySelector('.goog-te-combo')) {
+          window.googleTranslateElementInit();
+        }
       })();
 
       window.MybrandStore = (function () {
