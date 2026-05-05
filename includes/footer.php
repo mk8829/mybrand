@@ -12,7 +12,7 @@ $footerSections = cms_get_footer_sections();
             <div class="col-lg-5">
                 <div class="plf-brand">
                   <a href="<?php echo url('index.php'); ?>" class="plf-logo d-inline-block mb-3">
-                    <img src="<?php echo url('assets/imgs/home/footer/Company-Logo-New-Reverse-300x84.webp'); ?>" alt="mybrandplease">
+                    <img src="<?php echo url('assets/imgs/logo/mybrandplease.gif'); ?>" alt="MyBrandPlease Logo">
                   </a>
                 <p class="plf-lead">Get in touch with us however is most convenient for you.</p>
                 <p class="plf-contact"><span>Call / WhatsApp:</span> +91 (971) 700 4615</p>
@@ -24,6 +24,7 @@ $footerSections = cms_get_footer_sections();
                     <a href="https://www.youtube.com/@mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
                     <a href="https://www.facebook.com/mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
                     <a href="https://www.instagram.com/mybrandplease_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@mybrandplease.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
                     <a href="https://x.com/mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
                     <a href="https://www.linkedin.com/in/mybrandplease/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
                     <a href="https://in.pinterest.com/mybrandplease/" target="_blank" rel="noopener noreferrer" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
