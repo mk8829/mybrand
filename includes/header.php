@@ -268,6 +268,44 @@ if (!function_exists('render_header_menu_items')) {
                     Get In Touch
                   </a>
 
+                  <div class="header-lang d-none d-lg-flex">
+                    <div class="header-lang-switcher" id="header-language-wrap" aria-expanded="false">
+                      <input type="hidden" id="header-language-value" value="en">
+                      <button
+                        class="header-lang-switcher__trigger"
+                        id="header-language-trigger"
+                        type="button"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                        aria-label="Select language">
+                        <span class="header-lang-switcher__current">
+                          <span class="header-lang-switcher__flag flag-en" data-language-flag-current aria-hidden="true"></span>
+                          <span class="header-area-1__language-label">EN</span>
+                        </span>
+                        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                      </button>
+                      <div class="header-lang-switcher__menu" id="header-language-list" role="listbox" aria-label="Language options">
+                        <button type="button" class="header-lang-switcher__option header-area-1__language-option is-active" data-value="en" data-label="EN" data-flag-class="flag-en" aria-selected="true">
+                          <span class="header-lang-switcher__flag flag-en" aria-hidden="true"></span>
+                          <span>EN</span>
+                        </button>
+                        <button type="button" class="header-lang-switcher__option header-area-1__language-option" data-value="ar" data-label="AR" data-flag-class="flag-ar" aria-selected="false">
+                          <span class="header-lang-switcher__flag flag-ar" aria-hidden="true"></span>
+                          <span>AR</span>
+                        </button>
+                        <button type="button" class="header-lang-switcher__option header-area-1__language-option" data-value="fr" data-label="FR" data-flag-class="flag-fr" aria-selected="false">
+                          <span class="header-lang-switcher__flag flag-fr" aria-hidden="true"></span>
+                          <span>FR</span>
+                        </button>
+                        <button type="button" class="header-lang-switcher__option header-area-1__language-option" data-value="es" data-label="ES" data-flag-class="flag-es" aria-selected="false">
+                          <span class="header-lang-switcher__flag flag-es" aria-hidden="true"></span>
+                          <span>ES</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div id="google_translate_element" class="header-lang-google-translate" aria-hidden="true"></div>
+                  </div>
+
                   <!-- Search Button -->
                   <div class="header__search">
                     <button class="search-open-btn" type="button" aria-expanded="false" aria-controls="site-search">
