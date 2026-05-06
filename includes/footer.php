@@ -3,6 +3,16 @@
 require_once __DIR__ . '/url.php';
 require_once __DIR__ . '/cms.php';
 $footerSections = cms_get_footer_sections();
+$quickLinks = [];
+$legalLinks = [];
+
+if (isset($footerSections[0]['links']) && is_array($footerSections[0]['links'])) {
+    $quickLinks = $footerSections[0]['links'];
+}
+
+if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links'])) {
+    $legalLinks = $footerSections[1]['links'];
+}
 ?>
 
 
@@ -12,7 +22,7 @@ $footerSections = cms_get_footer_sections();
             <div class="col-lg-5">
                 <div class="plf-brand">
                   <a href="<?php echo url('index.php'); ?>" class="plf-logo d-inline-block mb-3">
-                    <img src="<?php echo url('assets/imgs/logo/mybrandplease.gif'); ?>" alt="MyBrandPlease Logo">
+                    <img src="<?php echo url('assets/imgs/home/footer/Company-Logo-New-Reverse-300x84.webp'); ?>" alt="mybrandplease">
                   </a>
                 <p class="plf-lead">Get in touch with us however is most convenient for you.</p>
                 <p class="plf-contact"><span>Call / WhatsApp:</span> +91 (971) 700 4615</p>
@@ -21,13 +31,13 @@ $footerSections = cms_get_footer_sections();
                   <div class="plf-follow mt-4">
                     <a href="<?php echo url('contact.php'); ?>" class="plf-follow-btn">FOLLOW US <i class="fa-solid fa-user"></i></a>
                   <div class="plf-social mt-3">
-                    <a href="https://www.youtube.com/@mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-                    <a href="https://www.facebook.com/mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/mybrandplease_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="<?php echo url('contact.php'); ?>" aria-label="Youtube"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="<?php echo url('contact.php'); ?>" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="<?php echo url('contact.php'); ?>" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                     <a href="https://www.tiktok.com/@mybrandplease.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-                    <a href="https://x.com/mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a href="https://www.linkedin.com/in/mybrandplease/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                    <a href="https://in.pinterest.com/mybrandplease/" target="_blank" rel="noopener noreferrer" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
+                    <a href="<?php echo url('contact.php'); ?>" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="<?php echo url('contact.php'); ?>" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="<?php echo url('contact.php'); ?>" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
                   </div>
                 </div>
                 <div class="plf-review mt-4">
@@ -41,7 +51,7 @@ $footerSections = cms_get_footer_sections();
               <h4 class="plf-title">QUICK LINKS</h4>
               <ul class="plf-list list-unstyled mb-4">
                 
-                  <?php foreach ($footerSections[0]['links'] as $footerLink): ?>
+                  <?php foreach ($quickLinks as $footerLink): ?>
                     <li><a href="<?php echo htmlspecialchars(url((string) $footerLink['url']), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $footerLink['label'], ENT_QUOTES, 'UTF-8'); ?></a></li>
                 <?php endforeach; ?>
                 <li><a href="<?php echo url('https://mybrandplease.trustpass.alibaba.com/'); ?>">How it Works</a></li>
@@ -67,13 +77,7 @@ $footerSections = cms_get_footer_sections();
             <div class="col-sm-6 col-lg-4">
               <h4 class="plf-title">LEGAL DISCLAIMERS</h4>
               <ul class="plf-list list-unstyled mb-4">
-                <!-- <?php if (!empty($footerSections[1]['links'])): ?>
-                  <?php foreach ($footerSections[1]['links'] as $footerLink): ?>
-                    <li><a href="<?php echo htmlspecialchars(url((string) $footerLink['url']), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $footerLink['label'], ENT_QUOTES, 'UTF-8'); ?></a></li>
-                  <?php endforeach; ?>
-                <?php else: ?>
-                 
-                <?php endif; ?> -->
+                <!-- CMS legal links intentionally not rendered here; static links below are used instead. -->
                  <li><a href="<?php echo url('contact.php'); ?>">Terms of Service</a></li>
                   <li><a href="<?php echo url('privacy.php'); ?>">Privacy Policy</a></li>
                   <li><a href="<?php echo url('contact.php'); ?>">Refund Policy</a></li>
@@ -95,7 +99,7 @@ $footerSections = cms_get_footer_sections();
           </div>
 
           <div class="plf-bottom d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
-            <p class="mb-0">&copy; 2005-2026 NIMISHA IMPEX WORLDWIDE (P) LIMITED &bull; All rights reserved</p>
+            <p class="mb-0">&copy; 2005-2026 NIMISHA IMPEX WORLDWIDE (P) LIMITED | All rights reserved</p>
             <p class="mb-0">Celebrating 21 Years of Private Labelling Excellence</p>
           </div>
         </div>
@@ -887,20 +891,208 @@ $footerSections = cms_get_footer_sections();
         });
       })();
 
+      // Header language switcher with Google Translate integration.
+      (function () {
+        const switcher = document.getElementById('header-lang-switcher');
+        const trigger = document.getElementById('header-lang-trigger');
+        const menu = document.getElementById('header-lang-menu');
+        const label = document.getElementById('header-lang-label');
+        const flag = document.getElementById('header-lang-flag');
+        const options = switcher ? switcher.querySelectorAll('.header-lang-switcher__option') : [];
+        const supportedLanguages = ['en', 'fr', 'es'];
+        const languageNames = {
+          en: 'EN',
+          fr: 'FR',
+          es: 'ES'
+        };
+        const flagClasses = {
+          en: 'flag-en',
+          fr: 'flag-fr',
+          es: 'flag-es'
+        };
+
+        if (!switcher || !trigger || !menu || !label || !flag || !options.length) return;
+
+        function setCookie(name, value, days) {
+          const expires = new Date(Date.now() + days * 86400000).toUTCString();
+          const hostname = window.location.hostname;
+          const cookieParts = [name + '=' + value, 'expires=' + expires, 'path=/'];
+          document.cookie = cookieParts.join('; ');
+          if (hostname && hostname.indexOf('.') !== -1) {
+            document.cookie = cookieParts.concat(['domain=.' + hostname.replace(/^www\./i, '')]).join('; ');
+          }
+        }
+
+        function clearCookie(name) {
+          const hostname = window.location.hostname;
+          document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+          if (hostname && hostname.indexOf('.') !== -1) {
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.' + hostname.replace(/^www\./i, '');
+          }
+        }
+
+        function getCookie(name) {
+          const match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.$?*|{}()[\]\\/+^]/g, '\\$&') + '=([^;]*)'));
+          return match ? decodeURIComponent(match[1]) : '';
+        }
+
+        function getCurrentLanguage() {
+          const cookieValue = getCookie('googtrans');
+          const match = cookieValue.match(/\/[a-z]{2}\/([a-z]{2})/i);
+          const lang = match ? match[1].toLowerCase() : 'en';
+          return supportedLanguages.includes(lang) ? lang : 'en';
+        }
+
+        function updateSelectedLanguage(lang) {
+          const nextLang = supportedLanguages.includes(lang) ? lang : 'en';
+          label.textContent = languageNames[nextLang] || languageNames.en;
+          flag.className = 'header-lang-switcher__flag ' + (flagClasses[nextLang] || flagClasses.en);
+
+          options.forEach(function (option) {
+            const isActive = option.getAttribute('data-lang') === nextLang;
+            option.classList.toggle('is-active', isActive);
+            option.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          });
+        }
+
+        function openMenu() {
+          switcher.classList.add('is-open');
+          switcher.setAttribute('aria-expanded', 'true');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeMenu() {
+          switcher.classList.remove('is-open');
+          switcher.setAttribute('aria-expanded', 'false');
+          trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        function waitForTranslateSelect(callback, attempts) {
+          const translateSelect = document.querySelector('.goog-te-combo');
+          if (translateSelect) {
+            callback(translateSelect);
+            return;
+          }
+
+          if (attempts <= 0) return;
+
+          window.setTimeout(function () {
+            waitForTranslateSelect(callback, attempts - 1);
+          }, 300);
+        }
+
+        function dispatchNativeChange(element) {
+          try {
+            const changeEvent = new Event('change', { bubbles: true });
+            element.dispatchEvent(changeEvent);
+          } catch (error) {
+            const legacyEvent = document.createEvent('HTMLEvents');
+            legacyEvent.initEvent('change', true, true);
+            element.dispatchEvent(legacyEvent);
+          }
+        }
+
+        function triggerTranslate(lang) {
+          const targetLang = supportedLanguages.includes(lang) ? lang : 'en';
+
+          if (targetLang === 'en') {
+            clearCookie('googtrans');
+          } else {
+            setCookie('googtrans', '/en/' + targetLang, 30);
+          }
+
+          waitForTranslateSelect(function (translateSelect) {
+            if (targetLang === 'en') {
+              translateSelect.value = '';
+              dispatchNativeChange(translateSelect);
+              window.setTimeout(function () {
+                window.location.reload();
+              }, 150);
+              return;
+            }
+
+            if (translateSelect.value !== targetLang) {
+              translateSelect.value = targetLang;
+              dispatchNativeChange(translateSelect);
+            }
+          }, 20);
+        }
+
+        function ensureGoogleTranslate() {
+          if (window.google && window.google.translate && window.google.translate.TranslateElement) {
+            if (!window.mybrandpleaseTranslateInitialized) {
+              window.googleTranslateElementInit();
+            }
+            return;
+          }
+
+          if (document.getElementById('google-translate-script')) return;
+
+          window.googleTranslateElementInit = function () {
+            if (window.mybrandpleaseTranslateInitialized) return;
+            window.mybrandpleaseTranslateInitialized = true;
+            new window.google.translate.TranslateElement({
+              pageLanguage: 'en',
+              includedLanguages: supportedLanguages.join(','),
+              autoDisplay: false,
+              layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+
+            window.setTimeout(function () {
+              updateSelectedLanguage(getCurrentLanguage());
+            }, 400);
+          };
+
+          const script = document.createElement('script');
+          script.id = 'google-translate-script';
+          script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+          script.async = true;
+          document.body.appendChild(script);
+        }
+
+        updateSelectedLanguage(getCurrentLanguage());
+        ensureGoogleTranslate();
+
+        trigger.addEventListener('click', function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          if (switcher.classList.contains('is-open')) {
+            closeMenu();
+          } else {
+            openMenu();
+          }
+        });
+
+        options.forEach(function (option) {
+          option.addEventListener('click', function () {
+            const lang = option.getAttribute('data-lang') || 'en';
+            updateSelectedLanguage(lang);
+            closeMenu();
+            triggerTranslate(lang);
+          });
+        });
+
+        document.addEventListener('click', function (event) {
+          if (switcher.classList.contains('is-open') && !switcher.contains(event.target)) {
+            closeMenu();
+          }
+        });
+
+        document.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape' && switcher.classList.contains('is-open')) {
+            closeMenu();
+          }
+        });
+      })();
+
       // Custom language dropdown (header-area-1)
       (function () {
         const wrap = document.getElementById('header-language-wrap');
         const trigger = document.getElementById('header-language-trigger');
         const list = document.getElementById('header-language-list');
         const label = wrap && wrap.querySelector('.header-area-1__language-label');
-        const currentFlag = wrap && wrap.querySelector('[data-language-flag-current]');
         const hiddenInput = document.getElementById('header-language-value');
         if (!wrap || !trigger || !list || !hiddenInput) return;
-
-        function setCurrentFlag(flagClass) {
-          if (!currentFlag) return;
-          currentFlag.className = 'header-lang-switcher__flag ' + (flagClass || 'flag-en');
-        }
 
         function open() {
           wrap.classList.add('is-open');
@@ -929,19 +1121,12 @@ $footerSections = cms_get_footer_sections();
           option.addEventListener('click', function (e) {
             e.preventDefault();
             const value = this.getAttribute('data-value');
-            const text = this.getAttribute('data-label') || this.textContent.trim();
-            const flagClass = this.getAttribute('data-flag-class') || 'flag-en';
+            const text = this.textContent.trim();
             if (hiddenInput) hiddenInput.value = value;
             if (label) label.textContent = text;
-            setCurrentFlag(flagClass);
             list.querySelectorAll('.header-area-1__language-option').forEach(function (opt) {
-              const isSelected = opt === option;
-              opt.setAttribute('aria-selected', isSelected ? 'true' : 'false');
-              opt.classList.toggle('is-active', isSelected);
+              opt.setAttribute('aria-selected', opt === option ? 'true' : 'false');
             });
-            if (typeof window.mybrandpleaseApplyLanguage === 'function') {
-              window.mybrandpleaseApplyLanguage(value);
-            }
             close();
           });
         });
@@ -951,111 +1136,6 @@ $footerSections = cms_get_footer_sections();
             close();
           }
         });
-      })();
-
-      (function () {
-        const wrap = document.getElementById('header-language-wrap');
-        const hiddenInput = document.getElementById('header-language-value');
-        if (!wrap || !hiddenInput) return;
-
-        const storageKey = 'mybrandplease_selected_language';
-        const label = wrap.querySelector('.header-area-1__language-label');
-        const currentFlag = wrap.querySelector('[data-language-flag-current]');
-
-        function setCurrentFlag(flagClass) {
-          if (!currentFlag) return;
-          currentFlag.className = 'header-lang-switcher__flag ' + (flagClass || 'flag-en');
-        }
-
-        function setSelectedOption(lang) {
-          const target = wrap.querySelector('.header-area-1__language-option[data-value="' + lang + '"]')
-            || wrap.querySelector('.header-area-1__language-option[data-value="en"]');
-          if (!target) return;
-
-          const nextLang = target.getAttribute('data-value') || 'en';
-          const nextLabel = target.getAttribute('data-label') || nextLang.toUpperCase();
-          const nextFlagClass = target.getAttribute('data-flag-class') || 'flag-en';
-
-          hiddenInput.value = nextLang;
-          if (label) label.textContent = nextLabel;
-          setCurrentFlag(nextFlagClass);
-
-          wrap.querySelectorAll('.header-area-1__language-option').forEach(function (option) {
-            const isSelected = option === target;
-            option.setAttribute('aria-selected', isSelected ? 'true' : 'false');
-            option.classList.toggle('is-active', isSelected);
-          });
-        }
-
-        function triggerGoogleTranslate(lang) {
-          const select = document.querySelector('.goog-te-combo');
-          if (!select) return false;
-          select.value = lang === 'en' ? '' : lang;
-          select.dispatchEvent(new Event('change'));
-          return true;
-        }
-
-        window.mybrandpleaseApplyLanguage = function (lang) {
-          const nextLang = lang || 'en';
-          setSelectedOption(nextLang);
-          try {
-            window.localStorage.setItem(storageKey, nextLang);
-          } catch (error) {
-            // Ignore storage issues and continue.
-          }
-
-          let attempts = 0;
-          const maxAttempts = 20;
-          const attemptInterval = window.setInterval(function () {
-            attempts += 1;
-            if (triggerGoogleTranslate(nextLang) || attempts >= maxAttempts) {
-              window.clearInterval(attemptInterval);
-            }
-          }, 250);
-        };
-
-        window.googleTranslateElementInit = function () {
-          if (!window.google || !window.google.translate || !window.google.translate.TranslateElement) return;
-          if (!document.querySelector('#google_translate_element .goog-te-combo')) {
-            new window.google.translate.TranslateElement({
-              pageLanguage: 'en',
-              includedLanguages: 'ar,fr,es',
-              autoDisplay: false
-            }, 'google_translate_element');
-          }
-
-          const storedLanguage = (function () {
-            try {
-              return window.localStorage.getItem(storageKey) || hiddenInput.value || 'en';
-            } catch (error) {
-              return hiddenInput.value || 'en';
-            }
-          })();
-
-          window.setTimeout(function () {
-            window.mybrandpleaseApplyLanguage(storedLanguage);
-          }, 500);
-        };
-
-        const initialLanguage = (function () {
-          try {
-            return window.localStorage.getItem(storageKey) || hiddenInput.value || 'en';
-          } catch (error) {
-            return hiddenInput.value || 'en';
-          }
-        })();
-
-        setSelectedOption(initialLanguage);
-
-        if (!document.querySelector('script[data-google-translate-script]')) {
-          const script = document.createElement('script');
-          script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-          script.async = true;
-          script.setAttribute('data-google-translate-script', 'true');
-          document.body.appendChild(script);
-        } else if (document.querySelector('.goog-te-combo')) {
-          window.googleTranslateElementInit();
-        }
       })();
 
       window.MybrandStore = (function () {
