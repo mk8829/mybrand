@@ -417,121 +417,6 @@ function closeLogoutMessage() {
           </div>
         </section>
 
-        <style>
-          .category-section .cat-grid {
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 24px 32px;
-            max-width: 1360px;
-            margin: 0 auto;
-          }
-          .category-section .cat-card {
-            position: relative;
-            display: block;
-            border-radius: 8px;
-            aspect-ratio: 216 / 291;
-            perspective: 768px;
-            text-decoration: none;
-            box-shadow: 0 14px 30px rgba(34, 34, 34, 0.12);
-          }
-          .category-section .cat-card__flip {
-            position: relative;
-            display: block;
-            width: 100%;
-            height: 100%;
-            min-height: 250px;
-            border-radius: 8px;
-            transform-style: preserve-3d;
-            transition: transform 0.7s ease;
-          }
-          .category-section .cat-card__face {
-            position: absolute;
-            inset: 0;
-            border-radius: 8px;
-            overflow: hidden;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-          }
-          .category-section .cat-card__face--front {
-            background: #f7f7f7;
-          }
-          .category-section .cat-card__face--back {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 18px;
-            background: #ebebeb;
-            transform: rotateY(180deg);
-            text-align: center;
-          }
-          .category-section .cat-card__back-inner {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-          }
-          .category-section .cat-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.35s ease;
-          }
-          .category-section .cat-overlay {
-            display: none;
-          }
-          .category-section .cat-title {
-            margin: 0;
-            color: #ff508b;
-            font-family: "Abril Fatface", serif;
-            font-size: 22px;
-            font-weight: 400;
-            line-height: 1.25;
-            text-align: center;
-            max-width: 130px;
-          }
-          .category-section .cat-title--back {
-            color: #ff508b;
-          }
-          @media (hover: hover) and (pointer: fine) {
-            .category-section .cat-card:hover .cat-card__flip,
-            .category-section .cat-card:focus-visible .cat-card__flip {
-              transform: rotateY(180deg);
-            }
-            .category-section .cat-card:hover .cat-image,
-            .category-section .cat-card:focus-visible .cat-image {
-              transform: scale(1.03);
-            }
-            .category-section .cat-card:hover,
-            .category-section .cat-card:focus-visible {
-              box-shadow: 0 18px 38px rgba(34, 34, 34, 0.16);
-            }
-          }
-          @media (max-width: 1199px) {
-            .category-section .cat-grid {
-              grid-template-columns: repeat(4, minmax(0, 1fr));
-              gap: 22px 24px;
-            }
-          }
-          @media (max-width: 991px) {
-            .category-section .cat-grid {
-              grid-template-columns: repeat(3, minmax(0, 1fr));
-              gap: 20px;
-            }
-          }
-          @media (max-width: 767px) {
-            .category-section .cat-grid {
-              grid-template-columns: repeat(2, minmax(0, 1fr));
-              gap: 16px;
-            }
-            .category-section .cat-card__flip {
-              min-height: 210px;
-            }
-            .category-section .cat-title--back {
-              font-size: 20px;
-            }
-          }
-        </style>
-
         <section class="category-section section-spacing-120 rr-ov-hidden pt-0">
           <div class="container rr-container-1350">
             <div class="nav-tabs-modern" id="homeCategoryTabs">
@@ -550,13 +435,13 @@ function closeLogoutMessage() {
                   $itemHref = (string) ($item['href'] ?? url('shop.php') . '?category=' . rawurlencode((string) ($homeInitialCategory['slug'] ?? '')));
                 ?>
                 <a href="<?= htmlspecialchars($itemHref, ENT_QUOTES, 'UTF-8') ?>" class="cat-card" aria-label="<?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>">
-                  <span class="cat-card__flip">
-                    <span class="cat-card__face cat-card__face--front">
-                      <img src="<?= htmlspecialchars(url($itemImage), ENT_QUOTES, 'UTF-8') ?>" class="cat-image" alt="<?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>">
-                    </span>
-                    <span class="cat-card__face cat-card__face--back" aria-hidden="true">
-                      <span class="cat-card__back-inner">
-                        <h3 class="cat-title cat-title--back"><?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?></h3>
+                  <img src="<?= htmlspecialchars(url($itemImage), ENT_QUOTES, 'UTF-8') ?>" class="cat-image" alt="<?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>">
+                  <span class="cat-overlay">
+                    <span class="cat-copy">
+                      <h3 class="cat-title"><?= nl2br(htmlspecialchars(str_replace(' ', "\n", $itemName), ENT_QUOTES, 'UTF-8')) ?></h3>
+                      <span class="cat-badge">
+                        <span class="cat-badge__eyebrow">Cosmetics &amp; More on Your Brand</span>
+                        <span class="cat-badge__brand">mybrandplease.com</span>
                       </span>
                     </span>
                   </span>
@@ -594,13 +479,13 @@ function closeLogoutMessage() {
 
                 const cards = items.map((item) => `
                   <a href="${item.href}" class="cat-card" aria-label="${esc(item.name)}">
-                    <span class="cat-card__flip">
-                      <span class="cat-card__face cat-card__face--front">
-                        <img src="${toUrl(item.image)}" class="cat-image" alt="${esc(item.name)}">
-                      </span>
-                      <span class="cat-card__face cat-card__face--back" aria-hidden="true">
-                        <span class="cat-card__back-inner">
-                          <h3 class="cat-title cat-title--back">${esc(item.name)}</h3>
+                    <img src="${toUrl(item.image)}" class="cat-image" alt="${esc(item.name)}">
+                    <span class="cat-overlay">
+                      <span class="cat-copy">
+                        <h3 class="cat-title">${esc(String(item.name || '').replace(/ /g, '\n')).replace(/\n/g, '<br>')}</h3>
+                        <span class="cat-badge">
+                          <span class="cat-badge__eyebrow">Cosmetics &amp; More on Your Brand</span>
+                          <span class="cat-badge__brand">mybrandplease.com</span>
                         </span>
                       </span>
                     </span>
