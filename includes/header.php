@@ -331,6 +331,41 @@ if (!function_exists('render_header_menu_items')) {
                     </div>
                   </div>
 
+                  <div class="header-lang">
+                    <div class="header-lang-switcher" id="header-lang-switcher" aria-expanded="false">
+                      <button
+                        type="button"
+                        class="header-lang-switcher__trigger"
+                        id="header-lang-trigger"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                        aria-controls="header-lang-menu">
+                        <span class="header-lang-switcher__current">
+                          <span class="header-lang-switcher__flag flag-en" id="header-lang-flag" aria-hidden="true"></span>
+                          <span id="header-lang-label">EN</span>
+                        </span>
+                        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                      </button>
+                      <div class="header-lang-switcher__menu" id="header-lang-menu" role="listbox" aria-label="Choose language">
+                        <button type="button" class="header-lang-switcher__option is-active" data-lang="en" data-flag="flag-en" role="option" aria-selected="true">
+                          <span class="header-lang-switcher__flag flag-en" aria-hidden="true"></span>
+                          <span>English</span>
+                        </button>
+                        <button type="button" class="header-lang-switcher__option" data-lang="fr" data-flag="flag-fr" role="option" aria-selected="false">
+                          <span class="header-lang-switcher__flag flag-fr" aria-hidden="true"></span>
+                          <span>French</span>
+                        </button>
+                        <button type="button" class="header-lang-switcher__option" data-lang="es" data-flag="flag-es" role="option" aria-selected="false">
+                          <span class="header-lang-switcher__flag flag-es" aria-hidden="true"></span>
+                          <span>Spanish</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="header-lang-google-translate" aria-hidden="true">
+                      <div id="google_translate_element"></div>
+                    </div>
+                  </div>
+
                   
                   <!-- Wishlist Icon -->
                   <a href="<?php echo url('wishlist.php'); ?>" class="action-btn d-none d-lg-flex position-relative" aria-label="Wishlist">
